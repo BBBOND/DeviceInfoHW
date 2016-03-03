@@ -19,6 +19,8 @@ import java.util.HashMap;
 public class InfoUtils
 {
     public static final String UNKNOWN       = "Other";
+    public static final String PLATFORM      = "Platform";
+    public static final String RESOLUTION    = "Resolution";
     public static final String LCM           = "LCM";
     public static final String TOUCHPANEL    = "Touchscreen";
     public static final String ACCELEROMETER = "Accelerometer";
@@ -34,6 +36,9 @@ public class InfoUtils
     public static final String RTC           = "RTC";
     public static final String SOUND         = "Sound";
     public static final String MODEM         = "Modem";
+    public static final String VERSION       = "Version";
+
+    static ArrayList<String> mtkCameraListCached;
 
     public static String getPlatform()
     {
@@ -468,9 +473,12 @@ public class InfoUtils
 
         if (isMtkPlatform(platform))
         {
-            ArrayList<String> mtkCameraList = MtkUtil.getMtkCameraList();
+            if (mtkCameraListCached == null || mtkCameraListCached.isEmpty())
+            {
+                mtkCameraListCached = MtkUtil.getMtkCameraList();
+            }
 
-            cameraList.addAll(mtkCameraList);
+            cameraList.addAll(mtkCameraListCached);
         }
 
         if ( ! cameraList.isEmpty())   hm.put(InfoUtils.CAMERA,     TextUtils.join("\n", cameraList));

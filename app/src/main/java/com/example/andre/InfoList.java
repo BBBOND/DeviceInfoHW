@@ -27,15 +27,15 @@ public class InfoList
 
         ArrayList< Pair<String, String> > objList = new ArrayList< Pair<String, String> >();
 
-        String platform = InfoUtils.getPlatform();
+        String platform = InfoUtils.getPlatform().toUpperCase();
 
         addItem(objList, "Manufacturer", InfoUtils.getManufacturer());
         addItem(objList, "Model", InfoUtils.getModel());
         addItem(objList, "Brand", InfoUtils.getBrand());
 
-        addItem(objList, "Resolution", InfoUtils.getResolution());
+        addItem(objList, InfoUtils.RESOLUTION, InfoUtils.getResolution());
 
-        addItem(objList, "Platform", platform);
+        addItem(objList, InfoUtils.PLATFORM, platform);
 
         addItem(objList, "Android Version", InfoUtils.getAndroidVersion());
         addItem(objList, "API", InfoUtils.getAndroidAPI());
@@ -110,6 +110,8 @@ public class InfoList
     public static ArrayList< Pair<String, String> > buildProjectConfigList()
     {
         String[] keyList = {
+                InfoUtils.PLATFORM,
+                InfoUtils.RESOLUTION,
                 InfoUtils.PMIC,
                 InfoUtils.RTC,
                 InfoUtils.LCM,
@@ -125,18 +127,23 @@ public class InfoList
                 InfoUtils.LENS,
                 InfoUtils.SOUND,
                 InfoUtils.MODEM,
+                InfoUtils.VERSION,
                 InfoUtils.UNKNOWN
         };
 
         ArrayList< Pair<String, String> > objList = new ArrayList< Pair<String, String> >();
 
-        HashMap<String,String>  mtkhash = MtkUtil.getProjectDriversHash();
+        HashMap<String,String>  hash = MtkUtil.getProjectDriversHash();
+
+        String resolution = MtkUtil.getProjectResolution(hash);
+
+        hash.put(InfoUtils.RESOLUTION, resolution);
 
         for (String key : keyList)
         {
-            if (mtkhash.containsKey(key))
+            if (hash.containsKey(key))
             {
-                String value = mtkhash.get(key);
+                String value = hash.get(key);
 
                 addItem(objList, key, value);
             }

@@ -39,6 +39,7 @@ public class MtkUtil
                 "MTK_PLATFORM",
                 "LCM_HEIGHT",
                 "LCM_WIDTH",
+                "MTK_BUILD_VERNO",
                 "CUSTOM_KERNEL_LCM",
                 "CUSTOM_KERNEL_TOUCHPANEL",
                 "CUSTOM_HAL_IMGSENSOR",
@@ -106,8 +107,23 @@ public class MtkUtil
         {
             return InfoUtils.MODEM;
         }
+        if (mtkField.equals("MTK_PLATFORM"))
+        {
+            return InfoUtils.PLATFORM;
+        }
+        if (mtkField.equals("MTK_BUILD_VERNO"))
+        {
+            return InfoUtils.VERSION;
+        }
 
-        return "";
+        return mtkField;
+    }
+    public static String getProjectResolution (HashMap<String,String> hash)
+    {
+        String h = hash.get("LCM_HEIGHT");
+        String w = hash.get("LCM_WIDTH");
+
+        return h + "x" + w;
     }
 
     public static HashMap<String,String> getProjectDriversHash()
@@ -156,8 +172,6 @@ public class MtkUtil
                             if (key.contains(allowKey))
                             {
                                 String convKey = convertFields (key);
-
-                                System.out.println("!!!!!!!!!!!!!!");
 
                                 String[] valueList = value.trim().split(" ");
 
