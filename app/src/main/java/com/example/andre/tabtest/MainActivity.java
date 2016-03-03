@@ -1,7 +1,11 @@
 package com.example.andre.tabtest;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
    
@@ -10,13 +14,21 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-  
+
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.example.andre.InfoList;
+import com.example.andre.InfoUtils;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -156,10 +168,62 @@ public class MainActivity extends AppCompatActivity {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
 
-            String resolution =  InfoUtils.getResolution ();
+            String resolution =  InfoUtils.getResolution();
 
             textView.setText(resolution + getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+
+            TableLayout tableLayout = (TableLayout) rootView.findViewById(R.id.tableLayout);
+
+            fillInformation(tableLayout);
+
             return rootView;
         }
+    }
+
+
+    ///////////////////
+    public static void fillTableView (TableLayout tableLayout, ArrayList< Pair<String, String> > objList)
+    {
+        Context context = tableLayout.getContext();
+
+        tableLayout.removeAllViews();
+
+        tableLayout.setStretchAllColumns(true);
+
+        float horMargin = context.getResources().getDimension(R.dimen.activity_horizontal_margin);
+        int screenWidthOffset = InfoUtils.getScreenWidth()/2 - Math.round(horMargin);
+
+        // View
+
+        for (int i = 0; i < objList.size(); i++)
+        {
+            Pair<String, String> obj = objList.get(i);
+
+            TableRow row = new TableRow(context);
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+            row.setLayoutParams(lp);
+
+            int color = ContextCompat.getColor(context, R.color.colorBackground);
+            if (i % 2 == 0) row.setBackgroundColor(color);
+
+            TextView text1 = new TextView(context);
+            text1.setText(obj.first);
+
+            TextView text2 = new TextView(context);
+            text2.setText(obj.second);
+            text2.setMaxWidth(screenWidthOffset);
+
+            row.addView(text1);
+            row.addView(text2);
+
+            tableLayout.addView(row,i);
+        }
+    }
+
+    public static void fillInformation(TableLayout tableLayout)
+    {
+        ArrayList< Pair<String, String> > objList = InfoList.buildInfoList(false);
+
+        fillTableView(tableLayout, objList);
     }
 }
