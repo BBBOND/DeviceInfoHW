@@ -94,6 +94,42 @@ public class InfoList
             }
         }
 
+        //
+        addItem(objList, "RAM",   InfoUtils.getRamType(exec));
+        addItem(objList, "Flash", InfoUtils.getFlashName(exec));
+
+        addItem(objList, "Baseband", Build.getRadioVersion());
+
+        addItem(objList, "cmdline", cmdline);
+
+        //addItem(objList, "Partitions", InfoUtils.getPartitions(platform, exec));
+
+        return objList;
+    }
+
+    public static ArrayList< Pair<String, String> > buildProjectConfigList()
+    {
+        String[] keyList = {
+                InfoUtils.PMIC,
+                InfoUtils.RTC,
+                InfoUtils.LCM,
+                InfoUtils.TOUCHPANEL,
+                InfoUtils.ACCELEROMETER,
+                InfoUtils.ALSPS,
+                InfoUtils.MAGNETOMETER,
+                InfoUtils.GYROSCOPE,
+                InfoUtils.CHARGER,
+                InfoUtils.CAMERA,
+                InfoUtils.CAMERA_BACK,
+                InfoUtils.CAMERA_FRONT,
+                InfoUtils.LENS,
+                InfoUtils.SOUND,
+                InfoUtils.MODEM,
+                InfoUtils.UNKNOWN
+        };
+
+        ArrayList< Pair<String, String> > objList = new ArrayList< Pair<String, String> >();
+
         HashMap<String,String>  mtkhash = MtkUtil.getProjectDriversHash();
 
         for (String key : keyList)
@@ -106,16 +142,7 @@ public class InfoList
             }
         }
 
-        //
-        addItem(objList, "RAM",   InfoUtils.getRamType(exec));
-        addItem(objList, "Flash", InfoUtils.getFlashName(exec));
-
-        addItem(objList, "Baseband", Build.getRadioVersion());
-
-        addItem(objList, "cmdline", cmdline);
-
-        addItem(objList, "Partitions", InfoUtils.getPartitions(platform, exec));
-
         return objList;
     }
+
 }

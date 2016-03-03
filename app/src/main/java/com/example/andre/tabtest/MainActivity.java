@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.example.andre.InfoList;
 import com.example.andre.InfoUtils;
+import com.example.andre.androidshell.ShellExecuter;
 
 import java.util.ArrayList;
 
@@ -170,11 +171,34 @@ public class MainActivity extends AppCompatActivity {
 
             String resolution =  InfoUtils.getResolution();
 
-            textView.setText(resolution + getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            int tab = getArguments().getInt(ARG_SECTION_NUMBER);
+
+            textView.setText(resolution + getString(R.string.section_format, tab));
 
             TableLayout tableLayout = (TableLayout) rootView.findViewById(R.id.tableLayout);
 
-            fillInformation(tableLayout);
+            if (tab == 1)
+            {
+                ArrayList< Pair<String, String> > objList = InfoList.buildInfoList(false);
+
+                fillTableView(tableLayout, objList);
+            }
+            else if (tab == 2)
+            {
+                ArrayList< Pair<String, String> > objList = InfoList.buildProjectConfigList();
+
+                fillTableView(tableLayout, objList);
+            }
+            else if (tab == 3)
+            {
+                ShellExecuter exec = new ShellExecuter();
+
+                String platform = InfoUtils.getPlatform();
+
+                String partitions = InfoUtils.getPartitions(platform, exec);
+
+                textView.setText(partitions);
+            }
 
             return rootView;
         }
@@ -220,10 +244,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static void fillInformation(TableLayout tableLayout)
-    {
-        ArrayList< Pair<String, String> > objList = InfoList.buildInfoList(false);
-
-        fillTableView(tableLayout, objList);
-    }
 }
