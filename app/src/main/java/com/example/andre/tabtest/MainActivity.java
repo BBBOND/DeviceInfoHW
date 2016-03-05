@@ -1,6 +1,8 @@
 package com.example.andre.tabtest;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -33,7 +35,11 @@ import com.example.andre.androidshell.ShellExecuter;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+{
+
+    // settings
+    public static final String PREF_USE_ROOT_MODE = "user_root_switch";
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -66,17 +72,51 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
 
+        adjustAvailabilityActions();
+
       FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
       fab.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-              Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+              Snackbar.make(view, R.string.action_engineer_mode, Snackbar.LENGTH_LONG)
                       .setAction("Action", null).show();
+
+              openEngineerMode();
           }
       });
       
     }
 
+    public void adjustAvailabilityActions()
+    {
+        String platform = InfoUtils.getPlatform();
+
+        if ( ! InfoUtils.isMtkPlatform(platform))
+        {
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+            fab.setVisibility(View.GONE);
+        }
+    }
+
+    public void runApplication(String packageName, String activityName)
+    {
+        try {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.setComponent(new ComponentName(packageName, packageName + "." + activityName));
+            startActivity(intent);
+        }
+        catch (Exception e)
+        {
+            System.err.println ("Can't run app");
+        }
+    }
+
+    public void openEngineerMode()
+    {
+        runApplication("com.mediatek.engineermode", "EngineerMode");
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -87,17 +127,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_settings: {
+                Intent intent = new Intent(this, com.example.andre.tabtest.SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            case R.id.action_about: {
+                Intent intent = new Intent(this, com.example.andre.tabtest.AboutActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     
@@ -186,7 +230,14 @@ public class MainActivity extends AppCompatActivity {
 
             if (tab == 1)
             {
-                ArrayList< Pair<String, String> > objList = InfoList.buildInfoList(false);
+                Context context = tableLayout.getContext();
+
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                boolean rootMode = prefs.getBoolean(PREF_USE_ROOT_MODE, false);
+
+                //System.out.println("!!!!!!!!!!!" + rootMode);
+
+                ArrayList< Pair<String, String> > objList = InfoList.buildInfoList(rootMode);
 
                 fillTableView(tableLayout, objList);
             }
