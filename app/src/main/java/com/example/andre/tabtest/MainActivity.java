@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 
 import com.example.andre.InfoList;
 import com.example.andre.InfoUtils;
+import com.example.andre.MtkUtil;
 import com.example.andre.androidshell.ShellExecuter;
 
 import java.util.ArrayList;
@@ -198,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if (InfoUtils.isRkPlatform(platform))
                 {
-                    String partitions = InfoUtils.getPartitions(platform, exec);
+                    String partitions = InfoUtils.getRkPartitions(exec);
 
                     textView.setText(partitions);
                 }
@@ -207,9 +209,11 @@ public class MainActivity extends AppCompatActivity {
             {
                 if (InfoUtils.isMtkPlatform(platform))
                 {
-                    String partitions = InfoUtils.getPartitions(platform, exec);
+                    String text = InfoUtils.getMtkPartitions(exec);
 
-                    textView.setText(partitions);
+                    ArrayList< Pair<String, String> > objList = MtkUtil.makePartitionsList(text);
+
+                    fillTableView(tableLayout, objList);
                 }
                 else if (InfoUtils.isRkPlatform(platform))
                 {

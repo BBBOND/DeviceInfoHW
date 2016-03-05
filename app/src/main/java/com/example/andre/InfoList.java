@@ -151,5 +151,4 @@ public class InfoList
 
         return objList;
     }
-
 }

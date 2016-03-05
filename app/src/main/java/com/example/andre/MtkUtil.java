@@ -1,6 +1,7 @@
 package com.example.andre;
 
 import android.text.TextUtils;
+import android.util.Pair;
 
 import com.example.andre.androidshell.ShellExecuter;
 
@@ -163,8 +164,8 @@ public class MtkUtil
                             value = value.substring(0, pos);
                         }
 
-                        System.out.println(key);
-                        System.out.println(value);
+                        //System.out.println(key);
+                        //System.out.println(value);
 
                         // contains key
                         for (String allowKey : allowKeys)
@@ -187,5 +188,52 @@ public class MtkUtil
         }
 
         return hash;
+    }
+
+    public static ArrayList< Pair<String, String> > makePartitionsList(String text)
+    {
+        ArrayList< Pair<String, String> > objList = new ArrayList< Pair<String, String> >();
+
+        if (text.isEmpty()) return objList;
+
+        ArrayList<String> list = new ArrayList<String>();
+
+        String[] lines = text.split("\n");
+
+        int i = 0;
+        for (String line : lines)
+        {
+            if (i == 0)
+            {
+                list.add(line);
+
+                InfoList.addItem(objList, "Name", "Start | Size");
+            }
+            else
+            {
+                System.out.println(line);
+
+                line = line.replace("\t", " ");
+                line = line.replaceAll("\\s", "");
+
+                System.out.println(line);
+
+                String[] items = line.split("0x");
+
+                if (items.length >= 3)
+                {
+                    String key = items[0];
+                    String value = "0x" + items[1] + " 0x" + items[2];
+
+                    value = value.replace("0x0000", "0x");
+
+                    InfoList.addItem(objList, key, value);
+                }
+            }
+
+            i++;
+        }
+
+        return objList;
     }
 }

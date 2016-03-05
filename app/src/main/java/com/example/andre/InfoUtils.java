@@ -160,20 +160,6 @@ public class InfoUtils
         return platform.toUpperCase().startsWith("RK");
     }
 
-    public static String getPartitions (String platform, ShellExecuter se)
-    {
-        if (isRkPlatform(platform))
-        {
-            return getRkPartitions(se);
-        }
-        else if (isMtkPlatform(platform))
-        {
-            return getMtkPartitions(se);
-        }
-
-        return "";
-    }
-
     public static String getRkPartitions (ShellExecuter se)
     {
         String command  = "cat /proc/mtd";
