@@ -176,7 +176,7 @@ public class InfoUtils
 
     public static String getRkPartitions (ShellExecuter se)
     {
-        String command = "cat /proc/mtd";
+        String command  = "cat /proc/mtd";
 
         return se.execute(command);
     }
@@ -184,6 +184,13 @@ public class InfoUtils
     public static String getMtkPartitions (ShellExecuter se)
     {
         String command = "cat /proc/partinfo";
+
+        return se.execute(command);
+    }
+
+    public static String getRkNandInfo (ShellExecuter se)
+    {
+        String command = "cat /proc/rknand";
 
         return se.execute(command);
     }

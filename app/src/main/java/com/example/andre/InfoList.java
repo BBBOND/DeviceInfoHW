@@ -27,7 +27,7 @@ public class InfoList
 
         ArrayList< Pair<String, String> > objList = new ArrayList< Pair<String, String> >();
 
-        String platform = InfoUtils.getPlatform().toUpperCase();
+        String platform = InfoUtils.getPlatform();
 
         addItem(objList, "Manufacturer", InfoUtils.getManufacturer());
         addItem(objList, "Model", InfoUtils.getModel());

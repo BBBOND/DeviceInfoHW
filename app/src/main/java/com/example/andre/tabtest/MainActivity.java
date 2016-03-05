@@ -167,15 +167,20 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-
-            String resolution =  InfoUtils.getResolution();
 
             int tab = getArguments().getInt(ARG_SECTION_NUMBER);
 
-            textView.setText(resolution + getString(R.string.section_format, tab));
+            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+
+            //String resolution =  InfoUtils.getResolution();
+
+            //textView.setText(resolution + getString(R.string.section_format, tab));
 
             TableLayout tableLayout = (TableLayout) rootView.findViewById(R.id.tableLayout);
+
+            String platform = InfoUtils.getPlatform();
+
+            ShellExecuter exec = new ShellExecuter();
 
             if (tab == 1)
             {
@@ -185,19 +190,34 @@ public class MainActivity extends AppCompatActivity {
             }
             else if (tab == 2)
             {
-                ArrayList< Pair<String, String> > objList = InfoList.buildProjectConfigList();
+                if (InfoUtils.isMtkPlatform(platform))
+                {
+                    ArrayList< Pair<String, String> > objList = InfoList.buildProjectConfigList();
 
-                fillTableView(tableLayout, objList);
+                    fillTableView(tableLayout, objList);
+                }
+                else if (InfoUtils.isRkPlatform(platform))
+                {
+                    String partitions = InfoUtils.getPartitions(platform, exec);
+
+                    textView.setText(partitions);
+                }
             }
             else if (tab == 3)
             {
-                ShellExecuter exec = new ShellExecuter();
+                if (InfoUtils.isMtkPlatform(platform))
+                {
+                    String partitions = InfoUtils.getPartitions(platform, exec);
 
-                String platform = InfoUtils.getPlatform();
+                    textView.setText(partitions);
+                }
+                else if (InfoUtils.isRkPlatform(platform))
+                {
+                    String nandInfo = InfoUtils.getRkNandInfo(exec);
 
-                String partitions = InfoUtils.getPartitions(platform, exec);
+                    textView.setText(nandInfo);
+                }
 
-                textView.setText(partitions);
             }
 
             return rootView;
