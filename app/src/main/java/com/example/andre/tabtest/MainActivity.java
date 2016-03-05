@@ -272,7 +272,9 @@ public class MainActivity extends AppCompatActivity
                 {
                     String nandInfo = InfoUtils.getRkNandInfo(exec);
 
-                    textView.setText(nandInfo);
+                    //textView.setText(nandInfo);
+
+                    fillTableViewSimpleText(tableLayout, nandInfo);
                 }
 
             }
@@ -319,6 +321,26 @@ public class MainActivity extends AppCompatActivity
 
             tableLayout.addView(row,i);
         }
+    }
+
+    public static void fillTableViewSimpleText (TableLayout tableLayout, String text)
+    {
+        Context context = tableLayout.getContext();
+
+        tableLayout.removeAllViews();
+
+        // View
+
+        TableRow row = new TableRow(context);
+        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+        row.setLayoutParams(lp);
+
+        TextView tv = new TextView(context);
+        tv.setText(text);
+
+        row.addView(tv);
+
+        tableLayout.addView(row,0);
     }
 
 }

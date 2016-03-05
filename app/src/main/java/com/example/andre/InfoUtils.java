@@ -433,8 +433,6 @@ public class InfoUtils
             if (pos != -1)
             {
                 value = value.substring(0, pos).trim();
-
-                System.out.println(value);
             }
 
             if (value.endsWith("AF"))
