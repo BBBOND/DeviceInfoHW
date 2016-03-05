@@ -428,6 +428,15 @@ public class InfoUtils
         {
             String value = line.toUpperCase();
 
+            int pos = value.indexOf("(");
+
+            if (pos != -1)
+            {
+                value = value.substring(0, pos).trim();
+
+                System.out.println(value);
+            }
+
             if (value.endsWith("AF"))
             {
                 hm.put(InfoUtils.LENS, line);
