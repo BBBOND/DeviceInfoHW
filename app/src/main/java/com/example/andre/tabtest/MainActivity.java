@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity
 
     // settings
     public static final String PREF_USE_ROOT_MODE = "user_root_switch";
+    public static final String PREF_APPEND_I2C_ADDRESS = "append_i2c_address";
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -233,11 +234,12 @@ public class MainActivity extends AppCompatActivity
                 Context context = tableLayout.getContext();
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                boolean rootMode = prefs.getBoolean(PREF_USE_ROOT_MODE, false);
+                boolean isRootMode      = prefs.getBoolean(PREF_USE_ROOT_MODE, false);
+                boolean isAppendAddress = prefs.getBoolean(PREF_APPEND_I2C_ADDRESS, false);
 
                 //System.out.println("!!!!!!!!!!!" + rootMode);
 
-                ArrayList< Pair<String, String> > objList = InfoList.buildInfoList(rootMode);
+                ArrayList< Pair<String, String> > objList = InfoList.buildInfoList(isRootMode, isAppendAddress);
 
                 fillTableView(tableLayout, objList);
             }

@@ -21,7 +21,7 @@ public class InfoList
         }
     }
 
-    public static ArrayList< Pair<String, String> > buildInfoList(boolean isRootMode)
+    public static ArrayList< Pair<String, String> > buildInfoList(boolean isRootMode, boolean isAppendAddress)
     {
         ShellExecuter exec = new ShellExecuter();
 
@@ -43,7 +43,7 @@ public class InfoList
         addItem(objList, "Kernel", InfoUtils.getKernelVersion(exec));
 
         //
-        HashMap<String,String> hash = InfoUtils.getDriversHash(exec);
+        HashMap<String,String> hash = InfoUtils.getDriversHash(exec, isAppendAddress);
 
         //
         String cmdline = "";

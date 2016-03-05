@@ -183,6 +183,14 @@ public class InfoUtils
 
     //
 
+    public static String makeFullNameI2C (String name, String address, boolean enable)
+    {
+        if (enable)
+        return name + " (i2c " + address + ")";
+
+        return name;
+    }
+
     public static boolean isActiveDeviceI2C(File dir)
     {
         for (File file : dir.listFiles())
@@ -243,7 +251,7 @@ public class InfoUtils
         return false;
     }
 
-    public static ArrayList<String> getDeviceListDeepI2C(File dir)
+    public static ArrayList<String> getDeviceListDeepI2C(File dir, boolean isAppendAddress)
     {
         ArrayList<String> list = new ArrayList<String>();
 
@@ -292,16 +300,20 @@ public class InfoUtils
 
                         String subName = IOUtil.getFileText (subPath);
 
-                        if ( ! list.contains(subName))
+                        String fullName = makeFullNameI2C(subName, active, isAppendAddress);
+
+                        if ( ! list.contains(fullName))
                         {
-                            if ( ! isRockchipParentDirI2C(subName)) list.add(subName);
+                            if ( ! isRockchipParentDirI2C(subName)) list.add(fullName);
                         }
                     }
                     else
                     {
                         //System.out.println(name);
 
-                        if ( ! list.contains(name)) list.add(name);
+                        String fullName = makeFullNameI2C(name, active, isAppendAddress);
+
+                        if ( ! list.contains(fullName)) list.add(fullName);
                     }
                 }
             }
@@ -359,13 +371,13 @@ public class InfoUtils
         return list;
     }
 
-    public static String[] getDriversList(ShellExecuter se)
+    public static String[] getDriversList(ShellExecuter se, boolean isAppendAddress)
     {
         String path = "/sys/bus/i2c/drivers/";
 
         File dir = new File(path);
 
-        ArrayList<String> list = getDeviceListDeepI2C(dir);
+        ArrayList<String> list = getDeviceListDeepI2C(dir, isAppendAddress);
 
         return list.toArray(new String[0]);
     }
@@ -385,7 +397,7 @@ public class InfoUtils
         return false;
     }
 
-    public static HashMap<String,String> getDriversHash(ShellExecuter se)
+    public static HashMap<String,String> getDriversHash(ShellExecuter se, boolean isAppendAddress)
     {
         String[] pmicPrefixList    = {"ACT", "WM", "TPS", "MT63", "FAN53555", "NCP6"};
         String[] cameraPrefixList  = {"OV", "GC", "SP", "IMX", "S5", "HI", "MT9", "GT2"};
@@ -397,7 +409,7 @@ public class InfoUtils
         String[] accelerometerPrefixList  = {"LIS", "KXT", "BMA", "MMA", "MXC", "MC", "LSM303D"};
         String[] magnetometerPrefixList   = {"AKM", "YAMAHA53", "BMM", "MMC3", "QMC", "LSM303M"};
 
-        String[] list = InfoUtils.getDriversList(se);
+        String[] list = InfoUtils.getDriversList(se, isAppendAddress);
 
         HashMap<String,String> hm = new HashMap<String,String>();
 
