@@ -35,6 +35,7 @@ public class InfoUtils
     public static final String PMIC          = "PMIC";
     public static final String RTC           = "RTC";
     public static final String SOUND         = "Sound";
+    public static final String WIFI          = "WiFi";
     public static final String MODEM         = "Modem";
     public static final String VERSION       = "Version";
 
@@ -177,6 +178,13 @@ public class InfoUtils
     public static String getRkNandInfo (ShellExecuter se)
     {
         String command = "cat /proc/rknand";
+
+        return se.execute(command);
+    }
+
+    public static String getRkWiFi (ShellExecuter se)
+    {
+        String command = "cat /sys/class/rkwifi/chip";
 
         return se.execute(command);
     }

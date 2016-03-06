@@ -65,6 +65,9 @@ public class InfoList
 
         hash.put(InfoUtils.SOUND, InfoUtils.getSoundCard(exec));
 
+        if (InfoUtils.isRkPlatform(platform))
+            hash.put(InfoUtils.WIFI,  InfoUtils.getRkWiFi(exec));
+
         String[] keyList = {
                 InfoUtils.PMIC,
                 InfoUtils.RTC,
@@ -79,6 +82,7 @@ public class InfoList
                 InfoUtils.CAMERA_BACK,
                 InfoUtils.CAMERA_FRONT,
                 InfoUtils.LENS,
+                InfoUtils.WIFI,
                 InfoUtils.SOUND,
                 InfoUtils.MODEM,
                 InfoUtils.UNKNOWN
