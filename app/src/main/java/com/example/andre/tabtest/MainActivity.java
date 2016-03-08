@@ -243,40 +243,41 @@ public class MainActivity extends AppCompatActivity
 
                 fillTableView(tableLayout, objList);
             }
-            else if (tab == 2)
+            else if (InfoUtils.isMtkPlatform(platform))
             {
-                if (InfoUtils.isMtkPlatform(platform))
+                if (tab == 2)
                 {
-                    ArrayList< Pair<String, String> > objList = InfoList.buildProjectConfigList();
+                    ArrayList<Pair<String, String>> objList = InfoList.buildProjectConfigList();
 
-                    fillTableView(tableLayout, objList);
+                    if ( ! objList.isEmpty())
+                        fillTableView(tableLayout, objList);
                 }
-                else if (InfoUtils.isRkPlatform(platform))
-                {
-                    String partitions = InfoUtils.getRkPartitions(exec);
-
-                    textView.setText(partitions);
-                }
-            }
-            else if (tab == 3)
-            {
-                if (InfoUtils.isMtkPlatform(platform))
+                else if (tab == 3)
                 {
                     String text = InfoUtils.getMtkPartitions(exec);
 
-                    ArrayList< Pair<String, String> > objList = MtkUtil.makePartitionsList(text);
+                    ArrayList<Pair<String, String>> objList = MtkUtil.makePartitionsList(text);
 
-                    fillTableView(tableLayout, objList);
+                    if ( ! objList.isEmpty())
+                        fillTableView(tableLayout, objList);
                 }
-                else if (InfoUtils.isRkPlatform(platform))
+            }
+            else if (InfoUtils.isRkPlatform(platform))
+            {
+                if (tab == 2)
+                {
+                    String partitions = InfoUtils.getRkPartitions(exec);
+
+                    if ( ! partitions.isEmpty())
+                        textView.setText(partitions);
+                }
+                else if (tab == 3)
                 {
                     String nandInfo = InfoUtils.getRkNandInfo(exec);
 
-                    //textView.setText(nandInfo);
-
-                    fillTableViewSimpleText(tableLayout, nandInfo);
+                    if ( ! nandInfo.isEmpty())
+                        fillTableViewSimpleText(tableLayout, nandInfo);
                 }
-
             }
 
             return rootView;
@@ -342,5 +343,4 @@ public class MainActivity extends AppCompatActivity
 
         tableLayout.addView(row,0);
     }
-
 }
