@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -28,6 +29,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.example.andre.HttpFileUpload;
 import com.example.andre.InfoList;
 import com.example.andre.InfoUtils;
 import com.example.andre.MtkUtil;
@@ -116,7 +118,22 @@ public class MainActivity extends AppCompatActivity
 
     public void openEngineerMode()
     {
-        runApplication("com.mediatek.engineermode", "EngineerMode");
+        //runApplication("com.mediatek.engineermode", "EngineerMode");
+
+        sendReport();
+    }
+
+    public void sendReport()
+    {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        HttpFileUpload fileUpload = new HttpFileUpload();
+
+        fileUpload.setRemoteServerPath("http://mtkdevices.site90.com/mtkdevices/upload.php");
+        fileUpload.setRemoteServerFileHandlerName("fileToUpload");
+
+        fileUpload.upload(MtkUtil.PROJECT_CONFIG_PATH);
     }
 
     @Override

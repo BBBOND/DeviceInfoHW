@@ -13,6 +13,8 @@ import java.util.HashMap;
  */
 public class MtkUtil
 {
+    final public static String PROJECT_CONFIG_PATH = "/system/data/misc/ProjectConfig.mk";
+
     public static ArrayList<String> getMtkCameraList()
     {
         String fileName = "/system/lib/libcameracustom.so";
@@ -131,7 +133,7 @@ public class MtkUtil
     {
         HashMap<String,String> hash = new HashMap<String,String>();
 
-        String fileName = "/system/data/misc/ProjectConfig.mk";
+        String fileName = PROJECT_CONFIG_PATH;
 
         String[] allowKeys = getFields();
 
