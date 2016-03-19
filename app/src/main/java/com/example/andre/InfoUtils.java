@@ -168,9 +168,16 @@ public class InfoUtils
         return se.execute(command);
     }
 
-    public static String getMtkPartitions (ShellExecuter se)
+    public static String getMtkPartitionsGPT (ShellExecuter se)
     {
         String command = "cat /proc/partinfo";
+
+        return se.execute(command);
+    }
+
+    public static String getMtkPartitionsMBR (ShellExecuter se)
+    {
+        String command = "cat /proc/dumchar_info";
 
         return se.execute(command);
     }
@@ -422,6 +429,7 @@ public class InfoUtils
         HashMap<String,String> hm = new HashMap<String,String>();
 
         ArrayList<String> cameraList  = new ArrayList<String>();
+        ArrayList<String> lensList  = new ArrayList<String>();
         ArrayList<String> touchList   = new ArrayList<String>();
         ArrayList<String> chargerList = new ArrayList<String>();
         ArrayList<String> alspsList   = new ArrayList<String>();
@@ -445,7 +453,7 @@ public class InfoUtils
 
             if (value.endsWith("AF"))
             {
-                hm.put(InfoUtils.LENS, line);
+                lensList.add(line);
             }
             else if (isPrefixMatched(cameraPrefixList, value))
             {
@@ -502,6 +510,7 @@ public class InfoUtils
         }
 
         if ( ! cameraList.isEmpty())   hm.put(InfoUtils.CAMERA,     TextUtils.join("\n", cameraList));
+        if ( ! lensList.isEmpty())     hm.put(InfoUtils.LENS,       TextUtils.join("\n", lensList));
         if ( ! touchList.isEmpty())    hm.put(InfoUtils.TOUCHPANEL, TextUtils.join("\n", touchList));
         if ( ! accelerometerList.isEmpty()) hm.put(InfoUtils.ACCELEROMETER,   TextUtils.join("\n", accelerometerList));
         if ( ! magnetometerList.isEmpty())  hm.put(InfoUtils.MAGNETOMETER,    TextUtils.join("\n", magnetometerList));

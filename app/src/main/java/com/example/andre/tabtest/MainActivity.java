@@ -271,9 +271,18 @@ public class MainActivity extends AppCompatActivity
                 }
                 else if (tab == 3)
                 {
-                    String text = InfoUtils.getMtkPartitions(exec);
+                    String partitions = InfoUtils.getMtkPartitionsGPT(exec);
 
-                    ArrayList<Pair<String, String>> objList = MtkUtil.makePartitionsList(text);
+                    boolean swapAddress = false;
+
+                    if (partitions.isEmpty())
+                    {
+                        partitions = InfoUtils.getMtkPartitionsMBR(exec);
+
+                        swapAddress = true;
+                    }
+
+                    ArrayList<Pair<String, String>> objList = MtkUtil.makePartitionsList(partitions, swapAddress);
 
                     if ( ! objList.isEmpty())
                         fillTableView(tableLayout, objList);

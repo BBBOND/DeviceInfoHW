@@ -192,7 +192,7 @@ public class MtkUtil
         return hash;
     }
 
-    public static ArrayList< Pair<String, String> > makePartitionsList(String text)
+    public static ArrayList< Pair<String, String> > makePartitionsList(String text, boolean swapAddress)
     {
         ArrayList< Pair<String, String> > objList = new ArrayList< Pair<String, String> >();
 
@@ -215,17 +215,31 @@ public class MtkUtil
             {
                 System.out.println(line);
 
+                if ( ! line.contains("0x")) continue;
+
                 line = line.replace("\t", " ");
-                line = line.replaceAll("\\s", "");
+                line = line.replaceAll("\\s+", " ");
 
                 System.out.println(line);
 
-                String[] items = line.split("0x");
+                String[] items = line.split(" ");
 
                 if (items.length >= 3)
                 {
                     String key = items[0];
-                    String value = "0x" + items[1] + " 0x" + items[2];
+
+                    int startIndex = 1;
+                    int sizeIndex  = 2;
+
+                    if (swapAddress)
+                    {
+                        startIndex = 2;
+                        sizeIndex  = 1;
+                    }
+
+                    String start = items[startIndex];
+                    String size  = items[sizeIndex];
+                    String value = start + "\n" + size;
 
                     value = value.replace("0x0000", "0x");
 
