@@ -2,6 +2,7 @@ package com.example.andre.tabtest;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.StrictMode;
@@ -9,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
    
@@ -17,7 +19,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,9 +30,10 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.example.andre.HttpFileUpload;
 import com.example.andre.InfoList;
 import com.example.andre.InfoUtils;
+import com.example.andre.JsonHttp;
+import com.example.andre.JsonUtil;
 import com.example.andre.MtkUtil;
 import com.example.andre.androidshell.ShellExecuter;
 
@@ -125,15 +127,44 @@ public class MainActivity extends AppCompatActivity
 
     public void sendReport()
     {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+        try {
 
-        HttpFileUpload fileUpload = new HttpFileUpload();
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
 
-        fileUpload.setRemoteServerPath("http://mtkdevices.site90.com/mtkdevices/upload.php");
-        fileUpload.setRemoteServerFileHandlerName("fileToUpload");
+            //
+            JsonHttp jsonHttp = new JsonHttp();
 
-        fileUpload.upload(MtkUtil.PROJECT_CONFIG_PATH);
+            ArrayList<Pair<String, String>> objList = InfoList.buildProjectConfigList();
+
+            String json = JsonUtil.toJson(objList);
+
+            System.out.println(json);
+
+            String url = "http://192.168.0.101/mtkdevices/jsondevice.php";
+            String response = jsonHttp.post(url, json);
+
+            System.out.println(response);
+        }
+        catch (Exception e)
+        {
+            String text = e.getMessage();
+
+            System.err.println(text);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("Error")
+                    .setMessage(text)
+                    .setCancelable(false)
+                    .setNegativeButton("Close",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
     }
 
     @Override
