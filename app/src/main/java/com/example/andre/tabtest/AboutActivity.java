@@ -14,8 +14,10 @@ import com.example.andre.InfoList;
 import com.example.andre.InfoUtils;
 import com.example.andre.JsonHttp;
 import com.example.andre.JsonUtil;
+import com.example.andre.MtkUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AboutActivity extends AppCompatActivity {
 
@@ -62,9 +64,21 @@ public class AboutActivity extends AppCompatActivity {
 
             if (InfoUtils.isMtkPlatform(platform))
             {
-                ArrayList<Pair<String, String>> objList = InfoList.buildProjectConfigList();
+                boolean useRoot = true;
 
-                json = JsonUtil.toJson(objList);
+                HashMap<String,String> hash = MtkUtil.getProjectDriversHash();
+
+                if (hash.isEmpty())
+                {
+                    ArrayList<Pair<String, String>> objList = InfoList.buildInfoList(useRoot, true);
+                    json = JsonUtil.toJson(objList);
+                }
+                else
+                {
+                    ArrayList<Pair<String, String>> objList = InfoList.buildInfoList(useRoot, true);
+
+                    json = JsonUtil.toJsonMtk(objList, hash);
+                }
             }
             else
             {
@@ -75,7 +89,8 @@ public class AboutActivity extends AppCompatActivity {
 
             System.out.println(json);
 
-            String url = "http://192.168.0.101/devices/jsondevice.php";
+            //String url = "http://192.168.0.101/devices/jsondevice.php";
+            String url = "http://mtkdevices.site90.com/devices/jsondevice.php";
             JsonHttp jsonHttp = new JsonHttp();
             String response = jsonHttp.post(url, json);
 

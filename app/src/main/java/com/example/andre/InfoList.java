@@ -52,7 +52,7 @@ public class InfoList
         {
             cmdline = InfoUtils.getCmdline(exec);
 
-            if ( ! cmdline.isEmpty())
+            if ( ! cmdline.isEmpty() && InfoUtils.isMtkPlatform(platform))
             {
                 String lcmName = InfoUtils.getLcmName(cmdline);
 
@@ -99,8 +99,8 @@ public class InfoList
         }
 
         //
-        addItem(objList, "RAM",   InfoUtils.getRamType(exec));
-        addItem(objList, "Flash", InfoUtils.getFlashName(exec));
+        addItem(objList, InfoUtils.RAM,   InfoUtils.getRamType(exec));
+        addItem(objList, InfoUtils.FLASH, InfoUtils.getFlashName(exec));
 
         addItem(objList, "Baseband", Build.getRadioVersion());
 
@@ -138,10 +138,6 @@ public class InfoList
         ArrayList< Pair<String, String> > objList = new ArrayList< Pair<String, String> >();
 
         HashMap<String,String>  hash = MtkUtil.getProjectDriversHash();
-
-        String resolution = MtkUtil.getProjectResolution(hash);
-
-        hash.put(InfoUtils.RESOLUTION, resolution);
 
         for (String key : keyList)
         {

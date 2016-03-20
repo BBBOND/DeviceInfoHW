@@ -121,6 +121,7 @@ public class MtkUtil
 
         return mtkField;
     }
+
     public static String getProjectResolution (HashMap<String,String> hash)
     {
         String h = hash.get("LCM_HEIGHT");
@@ -129,15 +130,22 @@ public class MtkUtil
         return h + "x" + w;
     }
 
-    public static HashMap<String,String> getProjectDriversHash()
+    public static String getProjectConfigText()
     {
-        HashMap<String,String> hash = new HashMap<String,String>();
-
         String fileName = PROJECT_CONFIG_PATH;
 
         String[] allowKeys = getFields();
 
-        String text = IOUtil.getFileText(fileName);
+        return IOUtil.getFileText(fileName);
+    }
+
+    public static HashMap<String,String> getProjectDriversHash()
+    {
+        HashMap<String,String> hash = new HashMap<String,String>();
+
+        String[] allowKeys = getFields();
+
+        String text = getProjectConfigText();
 
         String[] lines = text.split("\n");
 
@@ -188,6 +196,11 @@ public class MtkUtil
                 }
             }
         }
+
+        // fix
+        String resolution = MtkUtil.getProjectResolution(hash);
+
+        hash.put(InfoUtils.RESOLUTION, resolution);
 
         return hash;
     }

@@ -42,6 +42,8 @@ public class InfoUtils
     public static final String SOUND         = "Sound";
     public static final String WIFI          = "Wi-Fi";
     public static final String MODEM         = "Modem";
+    public static final String RAM           = "RAM";
+    public static final String FLASH         = "Flash";
     public static final String VERSION       = "Version";
 
     static ArrayList<String> mtkCameraListCached;
