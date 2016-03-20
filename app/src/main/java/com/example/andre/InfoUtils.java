@@ -19,6 +19,11 @@ import java.util.HashMap;
 public class InfoUtils
 {
     public static final String UNKNOWN       = "Other";
+
+    public static final String MANUFACTURER  = "Manufacturer";
+    public static final String MODEL         = "Model";
+    public static final String BRAND         = "Brand";
+
     public static final String PLATFORM      = "Platform";
     public static final String RESOLUTION    = "Resolution";
     public static final String LCM           = "LCM";
@@ -35,7 +40,7 @@ public class InfoUtils
     public static final String PMIC          = "PMIC";
     public static final String RTC           = "RTC";
     public static final String SOUND         = "Sound";
-    public static final String WIFI          = "WiFi";
+    public static final String WIFI          = "Wi-Fi";
     public static final String MODEM         = "Modem";
     public static final String VERSION       = "Version";
 
@@ -418,10 +423,10 @@ public class InfoUtils
         String[] cameraPrefixList  = {"OV", "GC", "SP", "IMX", "S5", "HI", "MT9", "GT2"};
         String[] touchPrefixList   = {"GT", "FT", "S3", "GSL", "EKTF", "MSG", "MTK-TPD", "-TS", "SYNAPTIC"};
         String[] chargerPrefixList = {"BQ", "FAN", "NCP", "CW2", "SMB1360"};
-        String[] alspsPrefixList   = {"EPL", "APDS", "STK", "LTR", "CM", "AP", "TMD", "RPR", "TMG", "AL", "US"};
+        String[] alspsPrefixList   = {"EPL", "APDS", "STK3", "LTR", "CM", "AP", "TMD", "RPR", "TMG", "AL", "US"};
 
 
-        String[] accelerometerPrefixList  = {"LIS", "KXT", "BMA", "MMA", "MXC", "MC", "LSM303D"};
+        String[] accelerometerPrefixList  = {"LIS", "KXT", "KXC", "BMA", "MMA", "MXC", "MC", "LSM303D"};
         String[] magnetometerPrefixList   = {"AKM", "YAMAHA53", "BMM", "MMC3", "QMC", "LSM303M"};
 
         String[] list = InfoUtils.getDriversList(se, isAppendAddress);
@@ -429,7 +434,7 @@ public class InfoUtils
         HashMap<String,String> hm = new HashMap<String,String>();
 
         ArrayList<String> cameraList  = new ArrayList<String>();
-        ArrayList<String> lensList  = new ArrayList<String>();
+        ArrayList<String> lensList    = new ArrayList<String>();
         ArrayList<String> touchList   = new ArrayList<String>();
         ArrayList<String> chargerList = new ArrayList<String>();
         ArrayList<String> alspsList   = new ArrayList<String>();

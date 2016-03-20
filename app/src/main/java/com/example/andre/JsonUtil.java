@@ -22,7 +22,7 @@ public class JsonUtil
             for (Pair<String, String> obj : objList)
             {
                 String key   = obj.first;
-                String value = obj.second;
+                String value = obj.second.replace("\n", " ");
 
                 jsonObj.put(key, value);
 

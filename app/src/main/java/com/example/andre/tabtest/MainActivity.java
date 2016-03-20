@@ -120,51 +120,7 @@ public class MainActivity extends AppCompatActivity
 
     public void openEngineerMode()
     {
-        //runApplication("com.mediatek.engineermode", "EngineerMode");
-
-        sendReport();
-    }
-
-    public void sendReport()
-    {
-        try {
-
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-
-            //
-            JsonHttp jsonHttp = new JsonHttp();
-
-            ArrayList<Pair<String, String>> objList = InfoList.buildProjectConfigList();
-
-            String json = JsonUtil.toJson(objList);
-
-            System.out.println(json);
-
-            String url = "http://192.168.0.101/mtkdevices/jsondevice.php";
-            String response = jsonHttp.post(url, json);
-
-            System.out.println(response);
-        }
-        catch (Exception e)
-        {
-            String text = e.getMessage();
-
-            System.err.println(text);
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setTitle("Error")
-                    .setMessage(text)
-                    .setCancelable(false)
-                    .setNegativeButton("Close",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-            AlertDialog alert = builder.create();
-            alert.show();
-        }
+        runApplication("com.mediatek.engineermode", "EngineerMode");
     }
 
     @Override

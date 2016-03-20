@@ -29,9 +29,9 @@ public class InfoList
 
         String platform = InfoUtils.getPlatform();
 
-        addItem(objList, "Manufacturer", InfoUtils.getManufacturer());
-        addItem(objList, "Model", InfoUtils.getModel());
-        addItem(objList, "Brand", InfoUtils.getBrand());
+        addItem(objList, InfoUtils.MANUFACTURER, InfoUtils.getManufacturer());
+        addItem(objList, InfoUtils.MODEL, InfoUtils.getModel());
+        addItem(objList, InfoUtils.BRAND, InfoUtils.getBrand());
 
         addItem(objList, InfoUtils.RESOLUTION, InfoUtils.getResolution());
 

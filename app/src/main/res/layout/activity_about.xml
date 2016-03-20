@@ -51,6 +51,19 @@
             android:layout_marginTop="39dp"
             android:textAlignment="center" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_upload"
+            android:id="@+id/uploadbutton"
+            android:layout_gravity="center_horizontal"
+            android:onClick="onPressUploadButton" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
