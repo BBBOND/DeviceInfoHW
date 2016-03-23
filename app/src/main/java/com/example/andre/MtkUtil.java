@@ -198,9 +198,12 @@ public class MtkUtil
         }
 
         // fix
-        String resolution = MtkUtil.getProjectResolution(hash);
+        if ( ! hash.isEmpty())
+        {
+            String resolution = MtkUtil.getProjectResolution(hash);
 
-        hash.put(InfoUtils.RESOLUTION, resolution);
+            hash.put(InfoUtils.RESOLUTION, resolution);
+        }
 
         return hash;
     }
