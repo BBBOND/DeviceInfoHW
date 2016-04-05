@@ -422,13 +422,13 @@ public class InfoUtils
     public static HashMap<String,String> getDriversHash(ShellExecuter se, boolean isAppendAddress)
     {
         String[] pmicPrefixList    = {"ACT", "WM", "TPS", "MT63", "FAN53555", "NCP6"};
-        String[] cameraPrefixList  = {"OV", "GC", "SP", "IMX", "S5", "HI", "MT9", "GT2"};
+        String[] cameraPrefixList  = {"OV", "GC", "SP", "IMX", "S5", "HI", "MT9", "GT2", "SIV"};
         String[] touchPrefixList   = {"GT", "FT", "S3", "GSL", "EKTF", "MSG", "MTK-TPD", "-TS", "SYNAPTIC"};
         String[] chargerPrefixList = {"BQ", "FAN", "NCP", "CW2", "SMB1360"};
         String[] alspsPrefixList   = {"EPL", "APDS", "STK3", "LTR", "CM", "AP", "TMD", "RPR", "TMG", "AL", "US"};
 
 
-        String[] accelerometerPrefixList  = {"LIS", "KXT", "KXC", "BMA", "MMA", "MXC", "MC", "LSM303D"};
+        String[] accelerometerPrefixList  = {"LIS", "KX", "BMA", "MMA", "MXC", "MC", "LSM303D"}; // "KXT", "KXC"
         String[] magnetometerPrefixList   = {"AKM", "YAMAHA53", "BMM", "MMC3", "QMC", "LSM303M"};
 
         String[] list = InfoUtils.getDriversList(se, isAppendAddress);
