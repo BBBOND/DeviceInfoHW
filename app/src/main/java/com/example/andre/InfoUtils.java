@@ -421,15 +421,15 @@ public class InfoUtils
 
     public static HashMap<String,String> getDriversHash(ShellExecuter se, boolean isAppendAddress)
     {
-        String[] pmicPrefixList    = {"ACT", "WM", "TPS", "MT63", "FAN53555", "NCP6"};
-        String[] cameraPrefixList  = {"OV", "GC", "SP", "IMX", "S5", "HI", "MT9", "GT2", "SIV"};
+        String[] pmicPrefixList    = {"ACT", "WM83", "TPS", "MT63", "FAN53555", "NCP6", "MAX"};
+        String[] cameraPrefixList  = {"OV", "GC", "SP", "IMX", "S5K", "HI", "MT9", "GT2", "SIV"};
         String[] touchPrefixList   = {"GT", "FT", "S3", "GSL", "EKTF", "MSG", "MTK-TPD", "-TS", "SYNAPTIC"};
         String[] chargerPrefixList = {"BQ", "FAN", "NCP", "CW2", "SMB1360"};
         String[] alspsPrefixList   = {"EPL", "APDS", "STK3", "LTR", "CM", "AP", "TMD", "RPR", "TMG", "AL", "US"};
 
-
-        String[] accelerometerPrefixList  = {"LIS", "KX", "BMA", "MMA", "MXC", "MC", "LSM303D", "ADXL"}; // "KXT", "KXC"
-        String[] magnetometerPrefixList   = {"AKM", "YAMAHA53", "BMM", "MMC3", "QMC", "LSM303M", "S62"};
+        String[] accelerometerPrefixList  = {"LIS", "KX", "BMA", "MMA", "MXC", "MC", "LSM303D",  "LSM330D", "ADXL"}; // "KXT", "KXC"
+        String[] magnetometerPrefixList   = {"AKM", "YAMAHA53", "BMM", "MMC3", "QMC", "LSM303M", "LSM330M", "S62"};
+        String[] gyroscopeListPrefixList  = {"MPU"};
 
         String[] list = InfoUtils.getDriversList(se, isAppendAddress);
 
@@ -444,6 +444,7 @@ public class InfoUtils
 
         ArrayList<String> accelerometerList = new ArrayList<String>();
         ArrayList<String> magnetometerList = new ArrayList<String>();
+        ArrayList<String> gyroscopeList    = new ArrayList<String>();
 
         ArrayList<String> otherList = new ArrayList<String>();
 
@@ -458,29 +459,35 @@ public class InfoUtils
                 value = value.substring(0, pos).trim();
             }
 
-            if (value.endsWith("AF"))
-            {
-                lensList.add(line);
-            }
-            else if (isPrefixMatched(cameraPrefixList, value))
-            {
-                cameraList.add(line);
-            }
-            else if (isPrefixMatched(alspsPrefixList, value))
-            {
-                alspsList.add(line);
-            }
-            else if (isPrefixMatched(accelerometerPrefixList, value))
+            if (value.endsWith("ACCEL"))
             {
                 accelerometerList.add(line);
             }
-            else if (value.startsWith("MPU"))
+            if (value.endsWith("GYRO"))
             {
-                hm.put(InfoUtils.GYROSCOPE, line);
+                gyroscopeList.add(line);
             }
-            else if (isPrefixMatched(magnetometerPrefixList, value))
+            else if (value.endsWith("GYRO"))
             {
+                accelerometerList.add(line);
+            }
+            else if (value.endsWith("AF")) {
+                lensList.add(line);
+            }
+            else if (isPrefixMatched(cameraPrefixList, value)) {
+                cameraList.add(line);
+            }
+            else if (isPrefixMatched(alspsPrefixList, value)) {
+                alspsList.add(line);
+            }
+            else if (isPrefixMatched(accelerometerPrefixList, value)) {
+                accelerometerList.add(line);
+            }
+            else if (isPrefixMatched(magnetometerPrefixList, value)) {
                 magnetometerList.add(line);
+            }
+            else if (isPrefixMatched(gyroscopeListPrefixList, value)) {
+                gyroscopeList.add(line);
             }
             else if (isPrefixMatched(pmicPrefixList, value) || value.contains("REGULATOR") )
             {
@@ -490,11 +497,9 @@ public class InfoUtils
             {
                 chargerList.add(line);
             }
-            else if (isPrefixMatched(touchPrefixList, value) || value.endsWith("-TS") || value.endsWith("_TS") || value.endsWith("-TPD"))
-            {
+            else if (isPrefixMatched(touchPrefixList, value) || value.endsWith("-TS") || value.endsWith("_TS") || value.endsWith("-TPD")) {
                 touchList.add(line);
-            }
-            else if (value.startsWith("RTC"))
+            } else if (value.startsWith("RTC"))
             {
                 hm.put(InfoUtils.RTC, line);
             }
@@ -521,6 +526,7 @@ public class InfoUtils
         if ( ! touchList.isEmpty())    hm.put(InfoUtils.TOUCHPANEL, TextUtils.join("\n", touchList));
         if ( ! accelerometerList.isEmpty()) hm.put(InfoUtils.ACCELEROMETER,   TextUtils.join("\n", accelerometerList));
         if ( ! magnetometerList.isEmpty())  hm.put(InfoUtils.MAGNETOMETER,    TextUtils.join("\n", magnetometerList));
+        if ( ! gyroscopeList.isEmpty())     hm.put(InfoUtils.GYROSCOPE,       TextUtils.join("\n", gyroscopeList));
         if ( ! alspsList.isEmpty())    hm.put(InfoUtils.ALSPS,      TextUtils.join("\n", alspsList));
         if ( ! pmicList.isEmpty())     hm.put(InfoUtils.PMIC,       TextUtils.join("\n", pmicList));
         if ( ! otherList.isEmpty())    hm.put(InfoUtils.UNKNOWN,    TextUtils.join("\n", otherList));
