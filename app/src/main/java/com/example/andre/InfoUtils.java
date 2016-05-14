@@ -463,13 +463,9 @@ public class InfoUtils
             {
                 accelerometerList.add(line);
             }
-            if (value.endsWith("GYRO"))
-            {
-                gyroscopeList.add(line);
-            }
             else if (value.endsWith("GYRO"))
             {
-                accelerometerList.add(line);
+                gyroscopeList.add(line);
             }
             else if (value.endsWith("AF")) {
                 lensList.add(line);
