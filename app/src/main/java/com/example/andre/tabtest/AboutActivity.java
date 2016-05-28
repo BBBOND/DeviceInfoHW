@@ -5,6 +5,8 @@ import android.os.StrictMode;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Pair;
 import android.view.View;
 import android.widget.TextView;
@@ -20,6 +22,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AboutActivity extends AppCompatActivity {
+
+    //final String DEVICES_URL = "http://192.168.0.101/devices/";
+    final String DEVICES_URL = "http://mtkdevices.site90.com/devices/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,13 @@ public class AboutActivity extends AppCompatActivity {
 
         TextView authorTextView = (TextView)findViewById(R.id.authorTextView);
         authorTextView.setText(R.string.about_author);
+
+        TextView uploadTextView = (TextView)findViewById(R.id.uploadTextView);
+        uploadTextView.setText(R.string.about_upload_text);
+
+        TextView uploadLinkTextView = (TextView)findViewById(R.id.uploadLinkTextView);
+        uploadLinkTextView.setText(Html.fromHtml("<a href=\'" + DEVICES_URL + "\'> Devices Web Page </a >"));
+        uploadLinkTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
         TextView aboutBottomTextView = (TextView)findViewById(R.id.aboutBottomTextView);
         aboutBottomTextView.setText(R.string.about_bottom);
@@ -89,8 +101,8 @@ public class AboutActivity extends AppCompatActivity {
 
             System.out.println(json);
 
-            //String url = "http://192.168.0.101/devices/jsondevice.php";
-            String url = "http://mtkdevices.site90.com/devices/jsondevice.php";
+            String url = DEVICES_URL + "/jsondevice.php";
+
             JsonHttp jsonHttp = new JsonHttp();
             String response = jsonHttp.post(url, json);
 

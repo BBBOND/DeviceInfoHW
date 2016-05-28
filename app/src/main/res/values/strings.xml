@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Device Info Tab</string>
+    <string name="app_name">Device Info HW</string>
 
     <string name="action_engineer_mode">Open engineer menu</string>
 
@@ -20,11 +20,15 @@
     <string name="pref_description_show_address">Show device i2c address</string>
 
     <!-- Strings related to About -->
-    <string name="about_version">version 1.6</string>
+    <string name="about_version">version 1.7</string>
 
     <string name="about_author">author\n
         Andrey Efremov\n
         aka andr7e</string>
+
+    <string name="about_upload_text"><b>Upload your device information</b>\n
+It helps make program better, improve devices support\n and other developers can find similar devices and needed drivers.\n
+Result stored in database. You can see on:</string>
 
     <string name="about_bottom">(c) 2016</string>
 
