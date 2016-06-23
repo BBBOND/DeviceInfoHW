@@ -24,7 +24,7 @@ import java.util.HashMap;
 public class AboutActivity extends AppCompatActivity {
 
     //final String DEVICES_URL = "http://192.168.0.101/devices/";
-    final String DEVICES_URL = "http://mtkdevices.site90.com/devices/";
+    final String DEVICES_URL = "http://deviceinfo.net23.net/devices/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +74,8 @@ public class AboutActivity extends AppCompatActivity {
 
             String platform = InfoUtils.getPlatform();
 
+            ArrayList<Pair<String, String>> platformObjList = InfoList.buildDriversInfoListUpload();
+
             if (InfoUtils.isMtkPlatform(platform))
             {
                 boolean useRoot = true;
@@ -83,19 +85,20 @@ public class AboutActivity extends AppCompatActivity {
                 if (hash.isEmpty())
                 {
                     ArrayList<Pair<String, String>> objList = InfoList.buildInfoList(useRoot, true);
+                    objList.addAll(platformObjList);
                     json = JsonUtil.toJson(objList);
                 }
                 else
                 {
                     ArrayList<Pair<String, String>> objList = InfoList.buildInfoList(useRoot, true);
-
+                    objList.addAll(platformObjList);
                     json = JsonUtil.toJsonMtk(objList, hash);
                 }
             }
             else
             {
                 ArrayList<Pair<String, String>> objList = InfoList.buildInfoList(false, true);
-
+                objList.addAll(platformObjList);
                 json = JsonUtil.toJson(objList);
             }
 

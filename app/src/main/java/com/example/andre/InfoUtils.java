@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by andrey on 24.02.16.
@@ -45,8 +47,11 @@ public class InfoUtils
     public static final String RAM           = "RAM";
     public static final String FLASH         = "Flash";
     public static final String VERSION       = "Version";
+    public static final String DRIVERS       = "Drivers";
 
     static ArrayList<String> mtkCameraListCached;
+
+    public static final String[] cameraPrefixList  = {"OV\\d+", "GC\\d+", "SP\\d+", "IMX\\d+", "HI\\d+", "GT2\\d+", "SIV\\d+", "S5K\\w*", "MT9\\w*", "T4K\\w*"};
 
     public static String getPlatform()
     {
@@ -393,7 +398,7 @@ public class InfoUtils
         return list;
     }
 
-    public static String[] getDriversList(ShellExecuter se, boolean isAppendAddress)
+    public static String[] getDriversList(boolean isAppendAddress)
     {
         String path = "/sys/bus/i2c/drivers/";
 
@@ -401,7 +406,46 @@ public class InfoUtils
 
         ArrayList<String> list = getDeviceListDeepI2C(dir, isAppendAddress);
 
+        /*
+        // TEST
+        list.add("S5K4HY");
+        list.add("SP2560");
+        list.add("SPDIF");
+        list.add("OV8865");
+        */
+
         return list.toArray(new String[0]);
+    }
+
+    public static ArrayList<String> getPlatformDeviceList()
+    {
+        ArrayList<String> list = new ArrayList<String>();
+
+        String path = "/sys/bus/platform/drivers/";
+
+        File dir = new File(path);
+
+        System.out.println(dir);
+
+        File[] files = dir.listFiles();
+
+        if (files == null) return list;
+
+        for (File file : files)
+        {
+            if (file.isDirectory())
+            {
+                String name = file.getName();
+
+                list.add(name);
+            }
+        }
+
+        // TEST
+        //list.add("T4K85D7");
+        //list.add("qcom,T4K85D8");
+
+        return list;
     }
 
     //
@@ -419,10 +463,93 @@ public class InfoUtils
         return false;
     }
 
+    public static boolean isCameraMatched (String[] prefixList, String value)
+    {
+        for (String prefix : prefixList)
+        {
+            if (isPatternMatched(prefix, value))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean isPatternMatched(String pattern, String value)
+    {
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(value);
+        return m.matches();
+    }
+
+    public static ArrayList<String> getRkLcdList(ArrayList<String> driverList)
+    {
+        /*
+        rk616-mipi
+        ssd2828
+        rk3026-lvds
+        rk610-lcd
+        rk32-mipi
+        */
+
+        String[] lcdListPrefixList  = {"SSD2828"};
+        String[] rkLcdListPrefixList  = {"-MIPI", "-LVDS", "-LCD"};
+
+        ArrayList<String> rkLcdList  = new ArrayList<String>();
+
+        for (String line : driverList)
+        {
+            String value = line.toUpperCase();
+
+            int pos = value.indexOf("(");
+
+            if (pos != -1)
+            {
+                value = value.substring(0, pos).trim();
+            }
+
+            if (isPrefixMatched(lcdListPrefixList, value) || (value.startsWith("RK") && isPrefixMatched(rkLcdListPrefixList, value)))
+            {
+                rkLcdList.add(line);
+            }
+        }
+
+        return rkLcdList;
+    }
+
+    public static ArrayList<String> getQcomCameraList(ArrayList<String> driverList)
+    {
+        ArrayList<String> list  = new ArrayList<String>();
+
+        for (String line0 : driverList)
+        {
+            String line = line0;
+
+            if (line.startsWith("qcom,")) line = line.replace("qcom,", "").trim();
+
+            String value = line.toUpperCase();
+
+            int pos = value.indexOf("(");
+
+            if (pos != -1)
+            {
+                value = value.substring(0, pos).trim();
+            }
+
+            if (isCameraMatched(cameraPrefixList, value))
+            {
+                list.add(line);
+            }
+        }
+
+        return list;
+    }
+
+
     public static HashMap<String,String> getDriversHash(ShellExecuter se, boolean isAppendAddress)
     {
         String[] pmicPrefixList    = {"ACT", "WM83", "TPS", "MT63", "FAN53555", "NCP6", "MAX"};
-        String[] cameraPrefixList  = {"OV", "GC", "SP", "IMX", "S5K", "HI", "MT9", "GT2", "SIV"};
         String[] touchPrefixList   = {"GT", "FT", "S3", "GSL", "EKTF", "MSG", "MTK-TPD", "-TS", "SYNAPTIC"};
         String[] chargerPrefixList = {"BQ", "FAN", "NCP", "CW2", "SMB1360"};
         String[] alspsPrefixList   = {"EPL", "APDS", "STK3", "LTR", "CM", "AP", "TMD", "RPR", "TMG", "AL", "US"};
@@ -431,7 +558,7 @@ public class InfoUtils
         String[] magnetometerPrefixList   = {"AKM", "YAMAHA53", "BMM", "MMC3", "QMC", "LSM303M", "LSM330M", "S62"};
         String[] gyroscopeListPrefixList  = {"MPU"};
 
-        String[] list = InfoUtils.getDriversList(se, isAppendAddress);
+        String[] list = InfoUtils.getDriversList(isAppendAddress);
 
         HashMap<String,String> hm = new HashMap<String,String>();
 
@@ -445,6 +572,8 @@ public class InfoUtils
         ArrayList<String> accelerometerList = new ArrayList<String>();
         ArrayList<String> magnetometerList = new ArrayList<String>();
         ArrayList<String> gyroscopeList    = new ArrayList<String>();
+
+        ArrayList<String> driverList = getPlatformDeviceList();
 
         ArrayList<String> otherList = new ArrayList<String>();
 
@@ -470,7 +599,7 @@ public class InfoUtils
             else if (value.endsWith("AF")) {
                 lensList.add(line);
             }
-            else if (isPrefixMatched(cameraPrefixList, value)) {
+            else if (isCameraMatched(cameraPrefixList, value)) {
                 cameraList.add(line);
             }
             else if (isPrefixMatched(alspsPrefixList, value)) {
@@ -516,6 +645,19 @@ public class InfoUtils
 
             cameraList.addAll(mtkCameraListCached);
         }
+        // From platform drivers
+        else if (isRkPlatform(platform))
+        {
+            ArrayList<String> rkLcdList  = getRkLcdList(driverList);
+
+            if ( ! rkLcdList.isEmpty())  hm.put(InfoUtils.LCM,    TextUtils.join("\n", rkLcdList));
+        }
+        else // qcom
+        {
+            ArrayList<String> qcomCameraList  = getQcomCameraList(driverList);
+
+            cameraList.addAll(qcomCameraList);
+        }
 
         if ( ! cameraList.isEmpty())   hm.put(InfoUtils.CAMERA,     TextUtils.join("\n", cameraList));
         if ( ! lensList.isEmpty())     hm.put(InfoUtils.LENS,       TextUtils.join("\n", lensList));
@@ -530,6 +672,8 @@ public class InfoUtils
         if ( ! chargerList.isEmpty())  hm.put(InfoUtils.CHARGER,    TextUtils.join("\n", chargerList));
         else
             hm.put(InfoUtils.CHARGER, "USE PMIC");
+
+        if ( ! driverList.isEmpty())    hm.put(InfoUtils.DRIVERS,    TextUtils.join("\n", driverList));
 
         return hm;
     }

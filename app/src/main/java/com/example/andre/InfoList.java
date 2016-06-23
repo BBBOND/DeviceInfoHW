@@ -1,11 +1,13 @@
 package com.example.andre;
 
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.Pair;
 
 import com.example.andre.androidshell.ShellExecuter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -19,6 +21,37 @@ public class InfoList
         {
             objList.add(new Pair<String, String>(key, value));
         }
+    }
+
+    public static ArrayList< Pair<String, String> > buildDriversInfoList()
+    {
+        ArrayList< Pair<String, String> > objList = new ArrayList< Pair<String, String> >();
+
+        ArrayList<String> driverList = InfoUtils.getPlatformDeviceList();
+
+        Collections.sort(driverList);
+
+        int i = 0;
+        for (String driver : driverList)
+        {
+            addItem(objList, driver, " ");
+            i++;
+        }
+
+        return objList;
+    }
+
+    public static ArrayList< Pair<String, String> > buildDriversInfoListUpload()
+    {
+        ArrayList< Pair<String, String> > objList = new ArrayList< Pair<String, String> >();
+
+        ArrayList<String> driverList = InfoUtils.getPlatformDeviceList();
+
+        Collections.sort(driverList);
+
+        addItem(objList, "Drivers", TextUtils.join("\n", driverList));
+
+        return objList;
     }
 
     public static ArrayList< Pair<String, String> > buildInfoList(boolean isRootMode, boolean isAppendAddress)
@@ -85,7 +118,8 @@ public class InfoList
                 InfoUtils.WIFI,
                 InfoUtils.SOUND,
                 InfoUtils.MODEM,
-                InfoUtils.UNKNOWN
+                InfoUtils.UNKNOWN,
+                //InfoUtils.DRIVERS
         };
 
         for (String key : keyList)

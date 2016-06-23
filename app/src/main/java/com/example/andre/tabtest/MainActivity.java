@@ -171,8 +171,8 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            // Show  total pages.
+            return 4;
         }
 
         @Override
@@ -184,6 +184,8 @@ public class MainActivity extends AppCompatActivity
                     return "SECTION 2";
                 case 2:
                     return "SECTION 3";
+                case 3:
+                    return "SECTION 4";
             }
             return null;
         }
@@ -243,20 +245,26 @@ public class MainActivity extends AppCompatActivity
 
                 //System.out.println("!!!!!!!!!!!" + rootMode);
 
-                ArrayList< Pair<String, String> > objList = InfoList.buildInfoList(isRootMode, isAppendAddress);
+                ArrayList< Pair<String, String>> objList = InfoList.buildInfoList(isRootMode, isAppendAddress);
+
+                fillTableView(tableLayout, objList);
+            }
+            else if (tab == 2)
+            {
+                ArrayList< Pair<String, String> > objList = InfoList.buildDriversInfoList();
 
                 fillTableView(tableLayout, objList);
             }
             else if (InfoUtils.isMtkPlatform(platform))
             {
-                if (tab == 2)
+                if (tab == 3)
                 {
                     ArrayList<Pair<String, String>> objList = InfoList.buildProjectConfigList();
 
                     if ( ! objList.isEmpty())
                         fillTableView(tableLayout, objList);
                 }
-                else if (tab == 3)
+                else if (tab == 4)
                 {
                     String partitions = InfoUtils.getMtkPartitionsGPT(exec);
 
@@ -277,14 +285,14 @@ public class MainActivity extends AppCompatActivity
             }
             else if (InfoUtils.isRkPlatform(platform))
             {
-                if (tab == 2)
+                if (tab == 3)
                 {
                     String partitions = InfoUtils.getRkPartitions(exec);
 
                     if ( ! partitions.isEmpty())
                         textView.setText(partitions);
                 }
-                else if (tab == 3)
+                else if (tab == 4)
                 {
                     String nandInfo = InfoUtils.getRkNandInfo(exec);
 
