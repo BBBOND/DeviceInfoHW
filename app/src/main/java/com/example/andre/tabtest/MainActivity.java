@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -19,6 +21,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -38,6 +41,7 @@ import com.example.andre.MtkUtil;
 import com.example.andre.androidshell.ShellExecuter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -148,8 +152,6 @@ public class MainActivity extends AppCompatActivity
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    
   
 
     /**
@@ -158,7 +160,8 @@ public class MainActivity extends AppCompatActivity
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        public SectionsPagerAdapter(FragmentManager fm)
+        {
             super(fm);
         }
 
@@ -172,21 +175,55 @@ public class MainActivity extends AppCompatActivity
         @Override
         public int getCount() {
             // Show  total pages.
-            return 4;
+
+            String platform = InfoUtils.getPlatform();
+
+            if (InfoUtils.isMtkPlatform(platform) || InfoUtils.isRkPlatform(platform)) return 4;
+
+            return 2;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "SECTION 1";
-                case 1:
-                    return "SECTION 2";
-                case 2:
-                    return "SECTION 3";
-                case 3:
-                    return "SECTION 4";
+
+            String platform = InfoUtils.getPlatform();
+
+            if (InfoUtils.isMtkPlatform(platform))
+            {
+                switch (position) {
+                    case 0:
+                        return "MAIN";
+                    case 1:
+                        return "PLATFORM";
+                    case 2:
+                        return "CONFIG";
+                    case 3:
+                        return "PARTITIONS";
+                }
             }
+            else if (InfoUtils.isRkPlatform(platform))
+            {
+                switch (position) {
+                    case 0:
+                        return "MAIN";
+                    case 1:
+                        return "PLATFORM";
+                    case 2:
+                        return "PARTITIONS";
+                    case 3:
+                        return "NAND";
+                }
+            }
+            else
+            {
+                switch (position) {
+                    case 0:
+                        return "MAIN";
+                    case 1:
+                        return "PLATFORM";
+                }
+            }
+
             return null;
         }
     }
@@ -225,10 +262,6 @@ public class MainActivity extends AppCompatActivity
 
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
 
-            //String resolution =  InfoUtils.getResolution();
-
-            //textView.setText(resolution + getString(R.string.section_format, tab));
-
             TableLayout tableLayout = (TableLayout) rootView.findViewById(R.id.tableLayout);
 
             String platform = InfoUtils.getPlatform();
@@ -245,7 +278,7 @@ public class MainActivity extends AppCompatActivity
 
                 //System.out.println("!!!!!!!!!!!" + rootMode);
 
-                ArrayList< Pair<String, String>> objList = InfoList.buildInfoList(isRootMode, isAppendAddress);
+                ArrayList< Pair<String, String>> objList = InfoList.buildInfoList(isRootMode, isAppendAddress, context);
 
                 fillTableView(tableLayout, objList);
             }
@@ -304,7 +337,6 @@ public class MainActivity extends AppCompatActivity
             return rootView;
         }
     }
-
 
     ///////////////////
     public static void fillTableView (TableLayout tableLayout, ArrayList< Pair<String, String> > objList)

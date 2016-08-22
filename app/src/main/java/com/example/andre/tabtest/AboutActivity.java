@@ -1,5 +1,6 @@
 package com.example.andre.tabtest;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.StrictMode;
 import android.support.v7.app.AlertDialog;
@@ -76,6 +77,8 @@ public class AboutActivity extends AppCompatActivity {
 
             ArrayList<Pair<String, String>> platformObjList = InfoList.buildDriversInfoListUpload();
 
+            Context context = getBaseContext();
+
             if (InfoUtils.isMtkPlatform(platform))
             {
                 boolean useRoot = true;
@@ -84,20 +87,20 @@ public class AboutActivity extends AppCompatActivity {
 
                 if (hash.isEmpty())
                 {
-                    ArrayList<Pair<String, String>> objList = InfoList.buildInfoList(useRoot, true);
+                    ArrayList<Pair<String, String>> objList = InfoList.buildInfoList(useRoot, true, context);
                     objList.addAll(platformObjList);
                     json = JsonUtil.toJson(objList);
                 }
                 else
                 {
-                    ArrayList<Pair<String, String>> objList = InfoList.buildInfoList(useRoot, true);
+                    ArrayList<Pair<String, String>> objList = InfoList.buildInfoList(useRoot, true, context);
                     objList.addAll(platformObjList);
                     json = JsonUtil.toJsonMtk(objList, hash);
                 }
             }
             else
             {
-                ArrayList<Pair<String, String>> objList = InfoList.buildInfoList(false, true);
+                ArrayList<Pair<String, String>> objList = InfoList.buildInfoList(false, true, context);
                 objList.addAll(platformObjList);
                 json = JsonUtil.toJson(objList);
             }

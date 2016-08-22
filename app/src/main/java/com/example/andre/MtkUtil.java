@@ -6,7 +6,11 @@ import android.util.Pair;
 import com.example.andre.androidshell.ShellExecuter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by andrey on 01.03.16.
@@ -15,7 +19,7 @@ public class MtkUtil
 {
     final public static String PROJECT_CONFIG_PATH = "/system/data/misc/ProjectConfig.mk";
 
-    public static ArrayList<String> getMtkCameraList()
+    public static ArrayList<String> getCameraList()
     {
         String fileName = "/system/lib/libcameracustom.so";
 
@@ -33,6 +37,41 @@ public class MtkUtil
         }
 
         return cameraList;
+    }
+
+    public static String getProcCameraInfo(ShellExecuter se)
+    {
+        String command = "cat /proc/driver/camera_info";
+
+        return se.execute(command);
+    }
+
+    public static ArrayList<String> getProcCameraList(ShellExecuter se)
+    {
+        // tets "CAM[1]: imx164mipiraw; CAM[2]: ov9760mipiraw;";  CAM[%d]:%s;
+        String info = getProcCameraInfo(se);
+
+        ArrayList<String> list = new ArrayList<String>();
+
+        if ( ! info.isEmpty()) {
+
+            String[] strList = info.split(";");
+
+            for (String item : strList)
+            {
+                Pattern pattern = Pattern.compile("\\s*CAM\\[(\\d+)\\]:\\s*([0-9a-z]{1,})\\s*\\w*");
+
+                Matcher m = pattern.matcher(item);
+
+                if (m.matches()) {
+                    String name = m.group(2);
+
+                    list.add(name);
+                }
+            }
+        }
+
+        return list;
     }
 
     public static String[] getFields ()

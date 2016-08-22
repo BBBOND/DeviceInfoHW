@@ -1,19 +1,22 @@
 package com.example.andre;
 
+import android.content.Context;
 import android.content.res.Resources;
+import android.hardware.Sensor;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
 import com.example.andre.androidshell.ShellExecuter;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import android.hardware.SensorManager;
+import android.util.Log;
 
 /**
  * Created by andrey on 24.02.16.
@@ -48,10 +51,13 @@ public class InfoUtils
     public static final String FLASH         = "Flash";
     public static final String VERSION       = "Version";
     public static final String DRIVERS       = "Drivers";
+    public static final String EXTRA         = "Extra";
 
     static ArrayList<String> mtkCameraListCached;
+    static ArrayList<String> qcomCameraListCached;
+    static ArrayList<String> qcomLensListCached;
 
-    public static final String[] cameraPrefixList  = {"OV\\d+", "GC\\d+", "SP\\d+", "IMX\\d+", "HI\\d+", "GT2\\d+", "SIV\\d+", "S5K\\w*", "MT9\\w*", "T4K\\w*"};
+    public static final String[] cameraPrefixList  = {"OV\\d+\\w*", "GC\\d+\\w*", "SP\\d+\\w*", "IMX\\d+\\w*", "HI\\d+\\w*", "GT2\\d+\\w*", "SIV\\d+\\w*", "S5K\\w*", "MT9\\w*", "T4K\\w*"};
 
     public static String getPlatform()
     {
@@ -171,6 +177,11 @@ public class InfoUtils
     public static boolean isRkPlatform(String platform)
     {
         return platform.toUpperCase().startsWith("RK");
+    }
+
+    public static boolean isQualcomPlatform(String platform)
+    {
+        return platform.toUpperCase().startsWith("QCOM") || platform.toUpperCase().startsWith("MSM");
     }
 
     public static String getRkPartitions (ShellExecuter se)
@@ -518,36 +529,16 @@ public class InfoUtils
         return rkLcdList;
     }
 
-    public static ArrayList<String> getQcomCameraList(ArrayList<String> driverList)
+    public static String cutSensorName(String name)
     {
-        ArrayList<String> list  = new ArrayList<String>();
+        int index = name.indexOf(" ");
 
-        for (String line0 : driverList)
-        {
-            String line = line0;
+        if (index != -1) return name.substring(0, index);
 
-            if (line.startsWith("qcom,")) line = line.replace("qcom,", "").trim();
-
-            String value = line.toUpperCase();
-
-            int pos = value.indexOf("(");
-
-            if (pos != -1)
-            {
-                value = value.substring(0, pos).trim();
-            }
-
-            if (isCameraMatched(cameraPrefixList, value))
-            {
-                list.add(line);
-            }
-        }
-
-        return list;
+        return name;
     }
 
-
-    public static HashMap<String,String> getDriversHash(ShellExecuter se, boolean isAppendAddress)
+    public static HashMap<String,String> getDriversHash(ShellExecuter se, boolean isAppendAddress, Context context)
     {
         String[] pmicPrefixList    = {"ACT", "WM83", "TPS", "MT63", "FAN53555", "NCP6", "MAX"};
         String[] touchPrefixList   = {"GT", "FT", "S3", "GSL", "EKTF", "MSG", "MTK-TPD", "-TS", "SYNAPTIC"};
@@ -640,7 +631,16 @@ public class InfoUtils
         {
             if (mtkCameraListCached == null || mtkCameraListCached.isEmpty())
             {
-                mtkCameraListCached = MtkUtil.getMtkCameraList();
+                ArrayList<String> procCameraList = MtkUtil.getProcCameraList(se);
+
+                if ( ! procCameraList.isEmpty())
+                {
+                    mtkCameraListCached = procCameraList;
+                }
+                else
+                {
+                    mtkCameraListCached = MtkUtil.getCameraList();
+                }
             }
 
             cameraList.addAll(mtkCameraListCached);
@@ -652,11 +652,47 @@ public class InfoUtils
 
             if ( ! rkLcdList.isEmpty())  hm.put(InfoUtils.LCM,    TextUtils.join("\n", rkLcdList));
         }
-        else // qcom
+        else if (isQualcomPlatform(platform))
         {
-            ArrayList<String> qcomCameraList  = getQcomCameraList(driverList);
+            if (qcomCameraListCached == null || qcomCameraListCached.isEmpty())
+            {
+                String ps = getProcessList(se);
 
-            cameraList.addAll(qcomCameraList);
+                int pid = QcomUtil.getCameraPid(ps);
+
+                String str = getQcomCamLib(se, pid);
+
+                qcomCameraListCached  = QcomUtil.getCameraList(str);
+
+                qcomLensListCached  = QcomUtil.getLensList(se, qcomCameraListCached);
+            }
+
+            cameraList.addAll(qcomCameraListCached);
+
+            lensList.addAll(qcomLensListCached);
+        }
+
+        //
+        SensorManager sm = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+
+        Sensor a = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        if (a != null) {
+            if (accelerometerList.isEmpty()) accelerometerList.add(cutSensorName(a.getName()));
+        }
+
+        Sensor l = sm.getDefaultSensor(Sensor.TYPE_LIGHT);
+        if (l != null) {
+            if (alspsList.isEmpty()) alspsList.add(cutSensorName(l.getName()));
+        }
+
+        Sensor g = sm.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        if (g != null) {
+            if (gyroscopeList.isEmpty()) gyroscopeList.add(cutSensorName(g.getName()));
+        }
+
+        Sensor m = sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        if (m != null) {
+            if (magnetometerList.isEmpty()) magnetometerList.add(cutSensorName(m.getName()));
         }
 
         if ( ! cameraList.isEmpty())   hm.put(InfoUtils.CAMERA,     TextUtils.join("\n", cameraList));
@@ -696,8 +732,43 @@ public class InfoUtils
 
     public static String getCmdline(ShellExecuter se)
     {
-        String command = "su -c cat /proc/cmdline";
+        String command = "cat /proc/cmdline";
+
+        return se.suexecute(command);
+    }
+
+    public static String getQcomHwInfo(ShellExecuter se)
+    {
+        String command = "cat /proc/hwinfo";
 
         return se.execute(command);
+    }
+
+    public static String getQcomLcdName(String hwinfo)
+    {
+        String[] list = hwinfo.split("\n");
+
+        for (String line : list) {
+            if (line.startsWith("LCD"))
+            {
+                return line.substring(4).trim();
+            }
+        }
+
+        return hwinfo;
+    }
+
+    public static String getProcessList(ShellExecuter se)
+    {
+        String command = "ps";
+
+        return se.execute(command);
+    }
+
+    public static String getQcomCamLib(ShellExecuter se, int pid)
+    {
+        String command = "cat /proc/" + pid + "/maps";
+
+        return se.suexecute(command);
     }
 }

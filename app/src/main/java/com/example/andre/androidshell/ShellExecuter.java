@@ -47,4 +47,9 @@ public class ShellExecuter
 
         return response;
     }
+
+    public String suexecute (String command)
+    {
+        return execute("su root " + command);
+    }
 }

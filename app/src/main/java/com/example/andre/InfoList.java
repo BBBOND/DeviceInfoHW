@@ -1,5 +1,6 @@
 package com.example.andre;
 
+import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Pair;
@@ -15,6 +16,8 @@ import java.util.HashMap;
  */
 public class InfoList
 {
+    public static ArrayList< Pair<String, String> > platfromDriversList;
+
     public static void addItem (ArrayList< Pair<String, String> > objList, String key, String value)
     {
         if ( ! value.isEmpty())
@@ -25,20 +28,23 @@ public class InfoList
 
     public static ArrayList< Pair<String, String> > buildDriversInfoList()
     {
-        ArrayList< Pair<String, String> > objList = new ArrayList< Pair<String, String> >();
+        if (platfromDriversList == null || platfromDriversList.isEmpty()) {
+            ArrayList<Pair<String, String>> objList = new ArrayList<Pair<String, String>>();
 
-        ArrayList<String> driverList = InfoUtils.getPlatformDeviceList();
+            ArrayList<String> driverList = InfoUtils.getPlatformDeviceList();
 
-        Collections.sort(driverList);
+            Collections.sort(driverList);
 
-        int i = 0;
-        for (String driver : driverList)
-        {
-            addItem(objList, driver, " ");
-            i++;
+            int i = 0;
+            for (String driver : driverList) {
+                addItem(objList, driver, " ");
+                i++;
+            }
+
+            platfromDriversList = objList;
         }
 
-        return objList;
+        return platfromDriversList;
     }
 
     public static ArrayList< Pair<String, String> > buildDriversInfoListUpload()
@@ -54,7 +60,7 @@ public class InfoList
         return objList;
     }
 
-    public static ArrayList< Pair<String, String> > buildInfoList(boolean isRootMode, boolean isAppendAddress)
+    public static ArrayList< Pair<String, String> > buildInfoList(boolean isRootMode, boolean isAppendAddress, Context context)
     {
         ShellExecuter exec = new ShellExecuter();
 
@@ -76,7 +82,7 @@ public class InfoList
         addItem(objList, "Kernel", InfoUtils.getKernelVersion(exec));
 
         //
-        HashMap<String,String> hash = InfoUtils.getDriversHash(exec, isAppendAddress);
+        HashMap<String,String> hash = InfoUtils.getDriversHash(exec, isAppendAddress, context);
 
         //
         String cmdline = "";
@@ -88,6 +94,23 @@ public class InfoList
             if ( ! cmdline.isEmpty() && InfoUtils.isMtkPlatform(platform))
             {
                 String lcmName = InfoUtils.getLcmName(cmdline);
+
+                if ( ! lcmName.isEmpty())
+                {
+                    hash.put(InfoUtils.LCM, lcmName);
+                }
+            }
+        }
+
+        if (InfoUtils.isQualcomPlatform(platform))
+        {
+            String hwinfo = InfoUtils.getQcomHwInfo(exec);
+
+            if ( ! hwinfo.isEmpty())
+            {
+                hash.put(InfoUtils.EXTRA, hwinfo);
+
+                String lcmName = InfoUtils.getQcomLcdName(hwinfo);
 
                 if ( ! lcmName.isEmpty())
                 {
@@ -119,6 +142,7 @@ public class InfoList
                 InfoUtils.SOUND,
                 InfoUtils.MODEM,
                 InfoUtils.UNKNOWN,
+                InfoUtils.EXTRA,
                 //InfoUtils.DRIVERS
         };
 
