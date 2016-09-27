@@ -35,6 +35,7 @@ public class InfoUtils
     public static final String TOUCHPANEL    = "Touchscreen";
     public static final String ACCELEROMETER = "Accelerometer";
     public static final String ALSPS         = "Als/ps";
+    public static final String ALSPS2         = "Alsps";
     public static final String MAGNETOMETER  = "Magnetometer";
     public static final String GYROSCOPE     = "Gyroscope";
     public static final String CHARGER       = "Charger";
@@ -57,7 +58,15 @@ public class InfoUtils
     static ArrayList<String> qcomCameraListCached;
     static ArrayList<String> qcomLensListCached;
 
-    public static final String[] cameraPrefixList  = {"OV\\d+\\w*", "GC\\d+\\w*", "SP\\d+\\w*", "IMX\\d+\\w*", "HI\\d+\\w*", "GT2\\d+\\w*", "SIV\\d+\\w*", "S5K\\w*", "MT9\\w*", "T4K\\w*"};
+    public static String[] cameraPrefixList;
+    public static String[] accelerometerPrefixList;
+    public static String[] alspsPrefixList;
+    public static String[] magnetometerPrefixList;
+    public static String[] gyroscopeListPrefixList;
+    public static String[] touchPrefixList;
+    public static String[] lcdPrefixList;
+    public static String[] pmicPrefixList;
+    public static String[] chargerPrefixList;
 
     public static String getPlatform()
     {
@@ -223,8 +232,7 @@ public class InfoUtils
 
     public static String makeFullNameI2C (String name, String address, boolean enable)
     {
-        if (enable)
-        return name + " (i2c " + address + ")";
+        if (enable) return name + " (i2c " + address + ")";
 
         return name;
     }
@@ -474,53 +482,36 @@ public class InfoUtils
         return false;
     }
 
-    public static boolean isCameraMatched (String[] prefixList, String value)
+    public static String cutDevName(String name, String sep)
     {
-        for (String prefix : prefixList)
-        {
-            if (isPatternMatched(prefix, value))
-            {
-                return true;
-            }
-        }
+        int index = name.indexOf(sep);
 
-        return false;
+        if (index != -1) return name.substring(0, index);
+
+        return name;
     }
 
-    public static boolean isPatternMatched(String pattern, String value)
+    public static String cutDevName(String name)
     {
-        Pattern p = Pattern.compile(pattern);
-        Matcher m = p.matcher(value);
-        return m.matches();
+        return cutDevName(name, "(");
+    }
+
+    public static String cutSensorName(String name)
+    {
+        return cutDevName(name, "");
     }
 
     public static ArrayList<String> getRkLcdList(ArrayList<String> driverList)
     {
-        /*
-        rk616-mipi
-        ssd2828
-        rk3026-lvds
-        rk610-lcd
-        rk32-mipi
-        */
-
-        String[] lcdListPrefixList  = {"SSD2828"};
-        String[] rkLcdListPrefixList  = {"-MIPI", "-LVDS", "-LCD"};
-
         ArrayList<String> rkLcdList  = new ArrayList<String>();
 
         for (String line : driverList)
         {
-            String value = line.toUpperCase();
+            String value = line.toLowerCase();
 
-            int pos = value.indexOf("(");
+            value = cutDevName(value);
 
-            if (pos != -1)
-            {
-                value = value.substring(0, pos).trim();
-            }
-
-            if (isPrefixMatched(lcdListPrefixList, value) || (value.startsWith("RK") && isPrefixMatched(rkLcdListPrefixList, value)))
+            if (DetectorComponents.isDeviceMatched(lcdPrefixList, value))
             {
                 rkLcdList.add(line);
             }
@@ -529,25 +520,38 @@ public class InfoUtils
         return rkLcdList;
     }
 
-    public static String cutSensorName(String name)
-    {
-        int index = name.indexOf(" ");
-
-        if (index != -1) return name.substring(0, index);
-
-        return name;
-    }
-
     public static HashMap<String,String> getDriversHash(ShellExecuter se, boolean isAppendAddress, Context context)
     {
-        String[] pmicPrefixList    = {"ACT", "WM83", "TPS", "MT63", "FAN53555", "NCP6", "MAX"};
-        String[] touchPrefixList   = {"GT", "FT", "S3", "GSL", "EKTF", "MSG", "MTK-TPD", "-TS", "SYNAPTIC"};
-        String[] chargerPrefixList = {"BQ", "FAN", "NCP", "CW2", "SMB1360"};
-        String[] alspsPrefixList   = {"EPL", "APDS", "STK3", "LTR", "CM", "AP", "TMD", "RPR", "TMG", "AL", "US"};
+        DeviceComponents components = new DeviceComponents();
+        components.load(context);
+        components.test();
 
-        String[] accelerometerPrefixList  = {"LIS", "KX", "BMA", "MMA", "MXC", "MC", "LSM303D",  "LSM330D", "ADXL"}; // "KXT", "KXC"
-        String[] magnetometerPrefixList   = {"AKM", "YAMAHA53", "BMM", "MMC3", "QMC", "LSM303M", "LSM330M", "S62"};
-        String[] gyroscopeListPrefixList  = {"MPU"};
+        if (cameraPrefixList == null)
+            cameraPrefixList = components.get(CAMERA);
+
+        if (accelerometerPrefixList == null)
+            accelerometerPrefixList = components.get(ACCELEROMETER);
+
+        if (alspsPrefixList == null)
+            alspsPrefixList = components.get(ALSPS2);
+
+        if (magnetometerPrefixList == null)
+            magnetometerPrefixList = components.get(MAGNETOMETER);
+
+        if (gyroscopeListPrefixList == null)
+            gyroscopeListPrefixList = components.get(GYROSCOPE);
+
+        if (touchPrefixList == null)
+            touchPrefixList = components.get(TOUCHPANEL);
+
+        if (pmicPrefixList == null)
+            pmicPrefixList = components.get(PMIC);
+
+        if (chargerPrefixList == null)
+            chargerPrefixList = components.get(CHARGER);
+
+        if (lcdPrefixList == null)
+            lcdPrefixList = components.get(LCM);
 
         String[] list = InfoUtils.getDriversList(isAppendAddress);
 
@@ -570,50 +574,37 @@ public class InfoUtils
 
         for (String line : list)
         {
-            String value = line.toUpperCase();
+            String value = line.toLowerCase();
 
-            int pos = value.indexOf("(");
+            value = cutDevName(value);
 
-            if (pos != -1)
-            {
-                value = value.substring(0, pos).trim();
-            }
-
-            if (value.endsWith("ACCEL"))
-            {
-                accelerometerList.add(line);
-            }
-            else if (value.endsWith("GYRO"))
-            {
-                gyroscopeList.add(line);
-            }
-            else if (value.endsWith("AF")) {
+            if (value.endsWith("AF")) {
                 lensList.add(line);
             }
-            else if (isCameraMatched(cameraPrefixList, value)) {
+            else if (DetectorComponents.isCameraMatched(cameraPrefixList, value.toLowerCase())) {
                 cameraList.add(line);
             }
-            else if (isPrefixMatched(alspsPrefixList, value)) {
+            else if (DetectorComponents.isDeviceMatched(alspsPrefixList, value)) {
                 alspsList.add(line);
             }
-            else if (isPrefixMatched(accelerometerPrefixList, value)) {
+            else if (DetectorComponents.isDeviceMatched(accelerometerPrefixList, value)) {
                 accelerometerList.add(line);
             }
-            else if (isPrefixMatched(magnetometerPrefixList, value)) {
+            else if (DetectorComponents.isDeviceMatched(magnetometerPrefixList, value)) {
                 magnetometerList.add(line);
             }
-            else if (isPrefixMatched(gyroscopeListPrefixList, value)) {
+            else if (DetectorComponents.isDeviceMatched(gyroscopeListPrefixList, value)) {
                 gyroscopeList.add(line);
             }
-            else if (isPrefixMatched(pmicPrefixList, value) || value.contains("REGULATOR") )
+            else if (DetectorComponents.isDeviceMatched(pmicPrefixList, value) )
             {
                 pmicList.add(line);
             }
-            else if (isPrefixMatched(chargerPrefixList, value) || value.contains("CHG") || value.contains("CHARGER"))
+            else if (DetectorComponents.isDeviceMatched(chargerPrefixList, value))
             {
                 chargerList.add(line);
             }
-            else if (isPrefixMatched(touchPrefixList, value) || value.endsWith("-TS") || value.endsWith("_TS") || value.endsWith("-TPD")) {
+            else if (DetectorComponents.isDeviceMatched(touchPrefixList, value)) {
                 touchList.add(line);
             } else if (value.startsWith("RTC"))
             {

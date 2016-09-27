@@ -26,7 +26,7 @@ public class QcomUtil {
 
             if (line.startsWith("qcom,")) line = line.replace("qcom,", "").trim();
 
-            String value = line.toUpperCase();
+            String value = line.toLowerCase();
 
             int pos = value.indexOf("(");
 
@@ -35,7 +35,7 @@ public class QcomUtil {
                 value = value.substring(0, pos).trim();
             }
 
-            if (InfoUtils.isCameraMatched(InfoUtils.cameraPrefixList, value))
+            if (DetectorComponents.isCameraMatched(InfoUtils.cameraPrefixList, value))
             {
                 list.add(line);
             }
@@ -70,7 +70,7 @@ public class QcomUtil {
 
                 line = line.substring(0, line.length() - 3);
 
-                if (InfoUtils.isCameraMatched(InfoUtils.cameraPrefixList, line.toUpperCase())) {
+                if (DetectorComponents.isCameraMatched(InfoUtils.cameraPrefixList, line.toLowerCase())) {
                     if ( ! list.contains(line)) list.add(line);
                 }
             }
