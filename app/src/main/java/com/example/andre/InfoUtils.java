@@ -578,7 +578,7 @@ public class InfoUtils
 
             value = cutDevName(value);
 
-            if (value.endsWith("AF")) {
+            if (value.endsWith("af")) {
                 lensList.add(line);
             }
             else if (DetectorComponents.isCameraMatched(cameraPrefixList, value.toLowerCase())) {
@@ -606,7 +606,7 @@ public class InfoUtils
             }
             else if (DetectorComponents.isDeviceMatched(touchPrefixList, value)) {
                 touchList.add(line);
-            } else if (value.startsWith("RTC"))
+            } else if (value.startsWith("rtc"))
             {
                 hm.put(InfoUtils.RTC, line);
             }
