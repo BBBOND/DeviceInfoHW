@@ -486,7 +486,7 @@ public class InfoUtils
     {
         int index = name.indexOf(sep);
 
-        if (index != -1) return name.substring(0, index);
+        if (index != -1) return name.substring(0, index).trim();
 
         return name;
     }
@@ -498,7 +498,7 @@ public class InfoUtils
 
     public static String cutSensorName(String name)
     {
-        return cutDevName(name, "");
+        return cutDevName(name, " ");
     }
 
     public static ArrayList<String> getRkLcdList(ArrayList<String> driverList)
@@ -524,7 +524,7 @@ public class InfoUtils
     {
         DeviceComponents components = new DeviceComponents();
         components.load(context);
-        components.test();
+        //components.test();
 
         if (cameraPrefixList == null)
             cameraPrefixList = components.get(CAMERA);
