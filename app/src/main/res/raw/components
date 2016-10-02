@@ -4,6 +4,7 @@ ov\d+
 gc\d+
 gt2\d+
 hi\d+
+hm\d+
 s5k\d+
 siv\d+
 sp\d+
@@ -47,9 +48,12 @@ bq
 fan
 ncp
 cw2
-smb1360
+oz
+smb
+ug
 \w*-*charger
 \w*-*chg
+\w*-*gauge
 ;
 ALSPS:
 epl
@@ -77,6 +81,7 @@ adxl
 \w*_accel\b
 ;
 MAGNETOMETER:
+ak9
 akm
 bmm
 yamaha53

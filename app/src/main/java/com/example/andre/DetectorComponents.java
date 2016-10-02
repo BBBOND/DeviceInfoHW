@@ -39,7 +39,7 @@ public class DetectorComponents
         //String[] list = {"mtk-tpd", "Goodix-TS",  "amx_ts", "gt9xx", "S3203", "FT", "focaltech", "atmel_mxt_ts_640t"};
         //String[] list = {"rk616-mipi", "ssd2828",  "rk3026-lvds", "rk610-lcd", "rk32-mipi"};
         //String[] list = { "act8846", "super-REGULATOR"};
-        //String[] list = { "bq27158", "smb1360",  "cw2015", "super-charger"};
+        //String[] list = { "bq27158", "smb1360", "smb345", cw2015", "super-charger", "ug31xx-gauge"};
         //String[] list = { "EPL2182", "stk3x1x"};
         //String[] list = { "akm899", "yas537", "yamaha530", "lsm330m"};
         //String[] list = {"mpu3050", "itg800", "super_gyro"};
