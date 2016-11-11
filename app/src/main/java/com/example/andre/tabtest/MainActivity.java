@@ -2,17 +2,13 @@ package com.example.andre.tabtest;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
-import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
    
@@ -35,18 +31,19 @@ import android.widget.TextView;
 
 import com.example.andre.InfoList;
 import com.example.andre.InfoUtils;
-import com.example.andre.JsonHttp;
-import com.example.andre.JsonUtil;
 import com.example.andre.MtkUtil;
 import com.example.andre.androidshell.ShellExecuter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener
 {
 
     // settings
+
+    SharedPreferences settings;
+
     public static final String PREF_USE_ROOT_MODE = "user_root_switch";
     public static final String PREF_APPEND_I2C_ADDRESS = "append_i2c_address";
 
@@ -82,6 +79,9 @@ public class MainActivity extends AppCompatActivity
 
 
         adjustAvailabilityActions();
+
+        settings = PreferenceManager.getDefaultSharedPreferences(this);
+        settings.registerOnSharedPreferenceChangeListener(this);
 
       FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -225,6 +225,11 @@ public class MainActivity extends AppCompatActivity
             }
 
             return null;
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
         }
     }
 
@@ -395,5 +400,18 @@ public class MainActivity extends AppCompatActivity
         row.addView(tv);
 
         tableLayout.addView(row,0);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
+    {
+        System.out.println("PREF CHANGED");
+
+        if (key.equals(PREF_APPEND_I2C_ADDRESS))
+        {
+            System.out.println("PREF CHANGED 2");
+
+            mSectionsPagerAdapter.notifyDataSetChanged();
+        }
     }
 }
