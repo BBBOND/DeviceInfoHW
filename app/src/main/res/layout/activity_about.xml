@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Large Text"
+            android:text="app name"
             android:id="@+id/appNameTextView"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
+            android:text="version"
             android:id="@+id/versionTextView"
             android:layout_below="@+id/appNameTextView"
             android:layout_alignLeft="@+id/appNameTextView"
@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
+            android:text="author text"
             android:id="@+id/authorTextView"
             android:layout_below="@+id/versionTextView"
             android:layout_alignRight="@+id/appNameTextView"
@@ -51,26 +51,17 @@
             android:layout_marginTop="39dp"
             android:textAlignment="center" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UPDATE"
+            android:id="@+id/updateButton"
+            android:layout_gravity="center_horizontal"
+            android:onClick="onPressUpdateButton" />
+
         <Space
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_gravity="center_horizontal" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
-            android:id="@+id/uploadTextView"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
-            android:id="@+id/uploadLinkTextView"
             android:layout_gravity="center_horizontal" />
 
         <Space
@@ -88,9 +79,25 @@
 
         <TextView
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="upload text"
+            android:id="@+id/uploadTextView"
+            android:gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="link text"
+            android:id="@+id/uploadLinkTextView"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
+            android:text="c year"
             android:id="@+id/aboutBottomTextView"
             android:textAlignment="center"
             android:layout_alignParentTop="true"

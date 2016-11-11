@@ -19,13 +19,19 @@ import com.example.andre.JsonHttp;
 import com.example.andre.JsonUtil;
 import com.example.andre.MtkUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class AboutActivity extends AppCompatActivity {
 
     //final String DEVICES_URL = "http://192.168.0.101/devices/";
     final String DEVICES_URL = "http://deviceinfo.net23.net/devices/";
+    final String COMPONENTS_URL = "https://github.com/andr7e/DeviceInfoHW/blob/master/app/src/main/res/raw/components";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +66,26 @@ public class AboutActivity extends AppCompatActivity {
     public void onPressUploadButton(View view)
     {
         sendReport();
+    }
+
+    public void onPressUpdateButton(View view)
+    {
+        try
+        {
+            System.out.println("update");
+
+            JsonHttp jsonHttp = new JsonHttp();
+            String response = jsonHttp.get(COMPONENTS_URL);
+            System.out.println(response);
+        }
+        catch (Exception e)
+        {
+            String text = e.getMessage();
+
+            System.err.println(text);
+
+            GuiUtil.showDialog(AboutActivity.this, "Error", text, "Close");
+        }
     }
 
     public void sendReport()

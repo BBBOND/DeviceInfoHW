@@ -20,7 +20,7 @@
     <string name="pref_description_show_address">Show device i2c address</string>
 
     <!-- Strings related to About -->
-    <string name="about_version">version 1.8</string>
+    <string name="about_version">version 1.9</string>
 
     <string name="about_author">author\n
         Andrey Efremov\n
