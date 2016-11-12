@@ -30,8 +30,8 @@ import okhttp3.Response;
 public class AboutActivity extends AppCompatActivity {
 
     //final String DEVICES_URL = "http://192.168.0.101/devices/";
-    final String DEVICES_URL = "http://deviceinfo.net23.net/devices/";
-    final String COMPONENTS_URL = "https://github.com/andr7e/DeviceInfoHW/blob/master/app/src/main/res/raw/components";
+    final String DEVICES_URL    = "http://deviceinfo.net23.net/devices/";
+    final String COMPONENTS_URL = "https://raw.githubusercontent.com/andr7e/DeviceInfoHW/master/app/src/main/res/raw/components";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +72,11 @@ public class AboutActivity extends AppCompatActivity {
     {
         try
         {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+
+            //
+
             System.out.println("update");
 
             JsonHttp jsonHttp = new JsonHttp();
