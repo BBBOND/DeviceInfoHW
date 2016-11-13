@@ -25,7 +25,7 @@
             android:id="@+id/appNameTextView"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:textAlignment="center" />
 
         <TextView
@@ -48,7 +48,7 @@
             android:layout_below="@+id/versionTextView"
             android:layout_alignRight="@+id/appNameTextView"
             android:layout_alignEnd="@+id/appNameTextView"
-            android:layout_marginTop="39dp"
+            android:layout_marginTop="25dp"
             android:textAlignment="center" />
 
         <Button
@@ -57,11 +57,20 @@
             android:text="UPDATE"
             android:id="@+id/updateButton"
             android:layout_gravity="center_horizontal"
-            android:onClick="onPressUpdateButton" />
+            android:onClick="onPressUpdateButton"
+            android:layout_marginTop="30dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/updateTextView"
+            android:layout_gravity="center_horizontal" />
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="30dp"
             android:layout_gravity="center_horizontal" />
 
         <Space
@@ -80,7 +89,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="upload text"
             android:id="@+id/uploadTextView"
             android:gravity="center_horizontal" />
@@ -88,7 +97,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="link text"
             android:id="@+id/uploadLinkTextView"
             android:layout_gravity="center_horizontal" />

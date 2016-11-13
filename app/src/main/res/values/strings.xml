@@ -33,4 +33,6 @@ Result stored in database. You can see on:</string>
     <string name="about_bottom">(c) 2016</string>
 
     <string name="button_upload">Upload</string>
+
+    <string name="about_update_text">Update components data</string>
 </resources>

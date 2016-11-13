@@ -12,6 +12,7 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.andre.DeviceComponents;
 import com.example.andre.GuiUtil;
 import com.example.andre.InfoList;
 import com.example.andre.InfoUtils;
@@ -19,6 +20,8 @@ import com.example.andre.JsonHttp;
 import com.example.andre.JsonUtil;
 import com.example.andre.MtkUtil;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +34,7 @@ public class AboutActivity extends AppCompatActivity {
 
     //final String DEVICES_URL = "http://192.168.0.101/devices/";
     final String DEVICES_URL    = "http://deviceinfo.net23.net/devices/";
-    final String COMPONENTS_URL = "https://raw.githubusercontent.com/andr7e/DeviceInfoHW/master/app/src/main/res/raw/components";
+    final String COMPONENTS_URL = "https://raw.githubusercontent.com/andr7e/DeviceComponents/master/components";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,9 @@ public class AboutActivity extends AppCompatActivity {
 
         TextView authorTextView = (TextView)findViewById(R.id.authorTextView);
         authorTextView.setText(R.string.about_author);
+
+        TextView updateTextView = (TextView)findViewById(R.id.updateTextView);
+        updateTextView.setText(R.string.about_update_text);
 
         TextView uploadTextView = (TextView)findViewById(R.id.uploadTextView);
         uploadTextView.setText(R.string.about_upload_text);
@@ -80,8 +86,18 @@ public class AboutActivity extends AppCompatActivity {
             System.out.println("update");
 
             JsonHttp jsonHttp = new JsonHttp();
-            String response = jsonHttp.get(COMPONENTS_URL);
-            System.out.println(response);
+
+            String componentsData = jsonHttp.get(COMPONENTS_URL);
+
+            System.out.println(componentsData);
+
+            //
+
+            System.out.println("save");
+
+            DeviceComponents.saveToData(componentsData, getBaseContext());
+
+            GuiUtil.showDialog(AboutActivity.this, "Update", "Updated successfully. Restart program.", "Ok");
         }
         catch (Exception e)
         {
