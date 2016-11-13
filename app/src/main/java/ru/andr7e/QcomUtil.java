@@ -1,6 +1,6 @@
-package com.example.andre;
+package ru.andr7e;
 
-import com.example.andre.androidshell.ShellExecuter;
+import ru.andr7e.androidshell.ShellExecuter;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;

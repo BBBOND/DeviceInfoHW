@@ -1,4 +1,4 @@
-package com.example.andre;
+package ru.andr7e;
 
 /**
  * Created by andre on 19.03.16.

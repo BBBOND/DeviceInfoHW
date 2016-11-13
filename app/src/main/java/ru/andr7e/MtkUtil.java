@@ -1,14 +1,12 @@
-package com.example.andre;
+package ru.andr7e;
 
 import android.text.TextUtils;
 import android.util.Pair;
 
-import com.example.andre.androidshell.ShellExecuter;
+import ru.andr7e.androidshell.ShellExecuter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

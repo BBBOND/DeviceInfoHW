@@ -1,9 +1,7 @@
-package com.example.andre.tabtest;
+package ru.andr7e.deviceinfohw;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.StrictMode;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -12,23 +10,16 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.andre.DeviceComponents;
-import com.example.andre.GuiUtil;
-import com.example.andre.InfoList;
-import com.example.andre.InfoUtils;
-import com.example.andre.JsonHttp;
-import com.example.andre.JsonUtil;
-import com.example.andre.MtkUtil;
+import ru.andr7e.DeviceComponents;
+import ru.andr7e.GuiUtil;
+import ru.andr7e.InfoList;
+import ru.andr7e.InfoUtils;
+import ru.andr7e.JsonHttp;
+import ru.andr7e.JsonUtil;
+import ru.andr7e.MtkUtil;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class AboutActivity extends AppCompatActivity {
 

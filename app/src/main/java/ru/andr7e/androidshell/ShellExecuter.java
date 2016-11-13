@@ -2,7 +2,7 @@
  * Created by andre on 22.02.16.
  */
 
-package com.example.andre.androidshell;
+package ru.andr7e.androidshell;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

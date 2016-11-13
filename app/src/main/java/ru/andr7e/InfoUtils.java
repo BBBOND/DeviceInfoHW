@@ -1,4 +1,4 @@
-package com.example.andre;
+package ru.andr7e;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -7,16 +7,13 @@ import android.os.Build;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
-import com.example.andre.androidshell.ShellExecuter;
+import ru.andr7e.androidshell.ShellExecuter;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import android.hardware.SensorManager;
-import android.util.Log;
+
 
 /**
  * Created by andrey on 24.02.16.

@@ -1,4 +1,4 @@
-package com.example.andre.tabtest;
+package com.example.andre.deviceinfohw;
 
 import org.junit.Test;
 

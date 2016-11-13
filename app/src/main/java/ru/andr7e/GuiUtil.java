@@ -1,4 +1,4 @@
-package com.example.andre;
+package ru.andr7e;
 
 import android.content.Context;
 import android.content.DialogInterface;

@@ -1,4 +1,4 @@
-package com.example.andre.tabtest;
+package ru.andr7e.deviceinfohw;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

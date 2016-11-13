@@ -1,4 +1,4 @@
-package com.example.andre;
+package ru.andr7e;
 
 import java.io.BufferedInputStream;
 import java.io.File;

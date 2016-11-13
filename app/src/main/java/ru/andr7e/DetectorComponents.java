@@ -1,4 +1,4 @@
-package com.example.andre;
+package ru.andr7e;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

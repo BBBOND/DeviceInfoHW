@@ -1,4 +1,4 @@
-package com.example.andre;
+package ru.andr7e;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

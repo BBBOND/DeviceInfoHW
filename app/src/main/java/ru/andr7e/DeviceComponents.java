@@ -1,15 +1,14 @@
-package com.example.andre;
+package ru.andr7e;
 
 import android.content.Context;
 import android.content.res.Resources;
 
-import com.example.andre.tabtest.R;
+import ru.andr7e.deviceinfohw.R;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**

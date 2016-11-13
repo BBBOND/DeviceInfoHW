@@ -1,11 +1,11 @@
-package com.example.andre;
+package ru.andr7e;
 
 import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Pair;
 
-import com.example.andre.androidshell.ShellExecuter;
+import ru.andr7e.androidshell.ShellExecuter;
 
 import java.util.ArrayList;
 import java.util.Collections;

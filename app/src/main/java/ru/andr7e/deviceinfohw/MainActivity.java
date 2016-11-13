@@ -1,4 +1,4 @@
-package com.example.andre.tabtest;
+package ru.andr7e.deviceinfohw;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,7 +16,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,13 +27,12 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.example.andre.InfoList;
-import com.example.andre.InfoUtils;
-import com.example.andre.MtkUtil;
-import com.example.andre.androidshell.ShellExecuter;
+import ru.andr7e.InfoList;
+import ru.andr7e.InfoUtils;
+import ru.andr7e.MtkUtil;
+import ru.andr7e.androidshell.ShellExecuter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener
 {
@@ -139,12 +136,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_settings: {
-                Intent intent = new Intent(this, com.example.andre.tabtest.SettingsActivity.class);
+                Intent intent = new Intent(this, ru.andr7e.deviceinfohw.SettingsActivity.class);
                 startActivity(intent);
                 return true;
             }
             case R.id.action_about: {
-                Intent intent = new Intent(this, com.example.andre.tabtest.AboutActivity.class);
+                Intent intent = new Intent(this, ru.andr7e.deviceinfohw.AboutActivity.class);
                 startActivity(intent);
                 return true;
             }
