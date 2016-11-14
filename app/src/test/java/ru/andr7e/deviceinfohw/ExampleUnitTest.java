@@ -1,4 +1,4 @@
-package com.example.andre.deviceinfohw;
+package ru.andr7e.deviceinfohw;
 
 import org.junit.Test;
 

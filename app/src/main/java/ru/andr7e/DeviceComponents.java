@@ -5,6 +5,7 @@ import android.content.res.Resources;
 
 import ru.andr7e.deviceinfohw.R;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -110,16 +111,23 @@ public class DeviceComponents
 
         try
         {
-            inputStream = context.openFileInput(fileName);
+            File file = new File(context.getFilesDir(), fileName);
 
-            byte[] b = new byte[inputStream.available()];
-            inputStream.read(b);
+            boolean exists = file.exists();
 
-            String text = new String(b);
+            if (exists)
+            {
+                inputStream = context.openFileInput(fileName);
 
-            inputStream.close();
+                byte[] b = new byte[inputStream.available()];
+                inputStream.read(b);
 
-            return text;
+                String text = new String(b);
+
+                inputStream.close();
+
+                return text;
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

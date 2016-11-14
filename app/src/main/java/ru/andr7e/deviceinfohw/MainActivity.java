@@ -402,11 +402,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
     {
-        System.out.println("PREF CHANGED");
+        //System.out.println("PREF CHANGED");
 
         if (key.equals(PREF_APPEND_I2C_ADDRESS))
         {
-            System.out.println("PREF CHANGED 2");
+            //System.out.println("PREF CHANGED 2");
 
             mSectionsPagerAdapter.notifyDataSetChanged();
         }
