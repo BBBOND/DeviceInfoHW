@@ -1,6 +1,7 @@
 package ru.andr7e.deviceinfohw;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -37,11 +38,13 @@ public class AboutActivity extends AppCompatActivity {
 
     public void fillAbout()
     {
+        String version = getResources().getString(R.string.about_version) + " " + BuildConfig.VERSION_NAME;
+
         TextView appNameTextView = (TextView)findViewById(R.id.appNameTextView);
         appNameTextView.setText(R.string.app_name);
 
         TextView versionTextView = (TextView)findViewById(R.id.versionTextView);
-        versionTextView.setText(R.string.about_version);
+        versionTextView.setText(version);
 
         TextView authorTextView = (TextView)findViewById(R.id.authorTextView);
         authorTextView.setText(R.string.about_author);
