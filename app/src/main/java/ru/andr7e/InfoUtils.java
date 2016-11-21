@@ -5,13 +5,19 @@ import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.os.Build;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
 
 import ru.andr7e.androidshell.ShellExecuter;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
+
 import android.hardware.SensorManager;
 
 
@@ -50,6 +56,7 @@ public class InfoUtils
     public static final String VERSION       = "Version";
     public static final String DRIVERS       = "Drivers";
     public static final String EXTRA         = "Extra";
+    public static final String BUILD         = "Build";
 
     static ArrayList<String> mtkCameraListCached;
     static ArrayList<String> qcomCameraListCached;
@@ -223,6 +230,86 @@ public class InfoUtils
         String command = "cat /sys/class/rkwifi/chip";
 
         return se.execute(command);
+    }
+
+    public static String getMaxCpuFreq (ShellExecuter se)
+    {
+        String command = "cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq";
+
+        return se.execute(command);
+    }
+
+    public static String getCpuFreqInfo (ShellExecuter se, int cpuNum, String key)
+    {
+        String command = "cat /sys/devices/system/cpu/cpu" + cpuNum + "/cpufreq/" + key;
+
+        return se.execute(command);
+    }
+
+    public static String getPatchLevel ()
+    {
+        String patch = Build.VERSION.SECURITY_PATCH;
+        if (!"".equals(patch)) {
+            try {
+                SimpleDateFormat template = new SimpleDateFormat("yyyy-MM-dd");
+                Date patchDate = template.parse(patch);
+
+                String format = "dMMMMyyyy";
+                int currentapiVersion =  Build.VERSION.SDK_INT;
+                if (currentapiVersion >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+                {
+                    format = DateFormat.getBestDateTimePattern(Locale.getDefault(), format);
+                }
+
+                patch = DateFormat.format(format, patchDate).toString();
+            } catch (ParseException e) {
+                // broken parse; fall through and use the raw string
+            }
+        }
+
+        return patch;
+    }
+
+    public static String getCpuABI ()
+    {
+        String cpu_abi;
+
+        int currentapiVersion =  Build.VERSION.SDK_INT;
+        if (currentapiVersion >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            cpu_abi = Build.SUPPORTED_64_BIT_ABIS[0];
+        }
+        else
+        {
+            cpu_abi = Build.CPU_ABI;
+        }
+
+        return cpu_abi;
+    }
+
+    public static String getCpuFreqInfo (ShellExecuter se)
+    {
+        int cpus = 10;
+
+        String res = "";
+
+        /*
+        for (int i = 0; i < cpus; i++)
+        {
+            String line = getCpuFreqInfo(se, i, "cpuinfo_cur_freq") + "/" + getCpuFreqInfo(se, i, "cpuinfo_max_freq") + "\n";
+            line += getCpuFreqInfo(se, i, "scaling_governor") + "\n";
+
+            res += line;
+        }*/
+
+        String line = getCpuFreqInfo(se, 0, "cpuinfo_max_freq") + "\n";
+        line += getCpuFreqInfo(se, 0, "scaling_governor") + "\n";
+
+        res += line + getCpuABI();
+
+        res += getPatchLevel();
+
+        return res;
     }
 
     //

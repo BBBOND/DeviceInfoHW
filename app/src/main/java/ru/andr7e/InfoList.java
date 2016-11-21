@@ -124,6 +124,8 @@ public class InfoList
         if (InfoUtils.isRkPlatform(platform))
             hash.put(InfoUtils.WIFI,  InfoUtils.getRkWiFi(exec));
 
+        hash.put(InfoUtils.BUILD,  Build.DISPLAY + " " + InfoUtils.getCpuFreqInfo(exec));
+
         String[] keyList = {
                 InfoUtils.PMIC,
                 InfoUtils.RTC,
@@ -143,6 +145,7 @@ public class InfoList
                 InfoUtils.MODEM,
                 InfoUtils.UNKNOWN,
                 InfoUtils.EXTRA,
+                InfoUtils.BUILD
                 //InfoUtils.DRIVERS
         };
 
