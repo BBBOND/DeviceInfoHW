@@ -175,9 +175,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
             String platform = InfoUtils.getPlatform();
 
-            if (InfoUtils.isMtkPlatform(platform) || InfoUtils.isRkPlatform(platform)) return 4;
+            if (InfoUtils.isMtkPlatform(platform) || InfoUtils.isRkPlatform(platform)) return 5;
 
-            return 2;
+            return 3;
         }
 
         @Override
@@ -191,10 +191,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                     case 0:
                         return "MAIN";
                     case 1:
-                        return "PLATFORM";
+                        return "MORE";
                     case 2:
-                        return "CONFIG";
+                        return "PLATFORM";
                     case 3:
+                        return "CONFIG";
+                    case 4:
                         return "PARTITIONS";
                 }
             }
@@ -204,10 +206,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                     case 0:
                         return "MAIN";
                     case 1:
-                        return "PLATFORM";
+                        return "MORE";
                     case 2:
-                        return "PARTITIONS";
+                        return "PLATFORM";
                     case 3:
+                        return "PARTITIONS";
+                    case 4:
                         return "NAND";
                 }
             }
@@ -217,6 +221,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                     case 0:
                         return "MAIN";
                     case 1:
+                        return "MORE";
+                    case 2:
                         return "PLATFORM";
                 }
             }
@@ -286,20 +292,26 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             }
             else if (tab == 2)
             {
+                ArrayList< Pair<String, String> > objList = InfoList.buildFeatureInfoList();
+
+                fillTableView(tableLayout, objList);
+            }
+            else if (tab == 3)
+            {
                 ArrayList< Pair<String, String> > objList = InfoList.buildDriversInfoList();
 
                 fillTableView(tableLayout, objList);
             }
             else if (InfoUtils.isMtkPlatform(platform))
             {
-                if (tab == 3)
+                if (tab == 4)
                 {
                     ArrayList<Pair<String, String>> objList = InfoList.buildProjectConfigList();
 
                     if ( ! objList.isEmpty())
                         fillTableView(tableLayout, objList);
                 }
-                else if (tab == 4)
+                else if (tab == 5)
                 {
                     String partitions = InfoUtils.getMtkPartitionsGPT(exec);
 
@@ -320,14 +332,14 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             }
             else if (InfoUtils.isRkPlatform(platform))
             {
-                if (tab == 3)
+                if (tab == 4)
                 {
                     String partitions = InfoUtils.getRkPartitions(exec);
 
                     if ( ! partitions.isEmpty())
                         textView.setText(partitions);
                 }
-                else if (tab == 4)
+                else if (tab == 5)
                 {
                     String nandInfo = InfoUtils.getRkNandInfo(exec);
 

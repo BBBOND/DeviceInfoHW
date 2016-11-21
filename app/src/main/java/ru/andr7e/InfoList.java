@@ -212,4 +212,45 @@ public class InfoList
 
         return objList;
     }
+
+    public static ArrayList< Pair<String, String> > buildFeatureInfoList() {
+        ShellExecuter exec = new ShellExecuter();
+
+        ArrayList<Pair<String, String>> objList = new ArrayList<Pair<String, String>>();
+
+        HashMap<String,String> hash = new HashMap<String,String>();
+
+        hash.put(InfoUtils.BUILD,  Build.DISPLAY);
+
+        String patchLevel = InfoUtils.getPatchLevel();
+
+        if ( ! patchLevel.isEmpty())
+        {
+            hash.put(InfoUtils.PATCH,  patchLevel);
+        }
+
+        hash.put(InfoUtils.ABI,      InfoUtils.getCpuABI());
+        hash.put(InfoUtils.FREQ,     InfoUtils.getCpuFreqInfo(exec));
+        hash.put(InfoUtils.GOVERNOR, InfoUtils.getCpuGovernor(exec));
+
+        String[] keyList = {
+                InfoUtils.BUILD,
+                InfoUtils.PATCH,
+                InfoUtils.ABI,
+                InfoUtils.FREQ,
+                InfoUtils.GOVERNOR
+        };
+
+        for (String key : keyList)
+        {
+            if (hash.containsKey(key))
+            {
+                String value = hash.get(key);
+
+                addItem(objList, key, value);
+            }
+        }
+
+        return objList;
+    }
 }

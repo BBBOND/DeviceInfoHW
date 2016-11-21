@@ -56,7 +56,12 @@ public class InfoUtils
     public static final String VERSION       = "Version";
     public static final String DRIVERS       = "Drivers";
     public static final String EXTRA         = "Extra";
+
     public static final String BUILD         = "Build";
+    public static final String ABI           = "ABI";
+    public static final String FREQ          = "Freq";
+    public static final String GOVERNOR      = "Governor";
+    public static final String PATCH         = "Patch";
 
     static ArrayList<String> mtkCameraListCached;
     static ArrayList<String> qcomCameraListCached;
@@ -246,24 +251,44 @@ public class InfoUtils
         return se.execute(command);
     }
 
+    public static String getCpuFreqInfo (ShellExecuter se)
+    {
+        String freqStr = getCpuFreqInfo(se, 0, "cpuinfo_max_freq");
+
+        Integer freq = Integer.parseInt(freqStr) / 1000;
+
+        return freq.toString();
+    }
+
+    public static String getCpuGovernor (ShellExecuter se)
+    {
+        return getCpuFreqInfo(se, 0, "scaling_governor");
+    }
+
     public static String getPatchLevel ()
     {
-        String patch = Build.VERSION.SECURITY_PATCH;
-        if (!"".equals(patch)) {
+        String patch = "";
+
+        int currentapiVersion = Build.VERSION.SDK_INT;
+
+        if (currentapiVersion >= Build.VERSION_CODES.M) {
             try {
-                SimpleDateFormat template = new SimpleDateFormat("yyyy-MM-dd");
-                Date patchDate = template.parse(patch);
+                patch = Build.VERSION.SECURITY_PATCH;
 
-                String format = "dMMMMyyyy";
-                int currentapiVersion =  Build.VERSION.SDK_INT;
-                if (currentapiVersion >= Build.VERSION_CODES.JELLY_BEAN_MR2)
-                {
-                    format = DateFormat.getBestDateTimePattern(Locale.getDefault(), format);
+                if (!"".equals(patch)) {
+                    try {
+                        SimpleDateFormat template = new SimpleDateFormat("yyyy-MM-dd");
+                        Date patchDate = template.parse(patch);
+
+                        String format = DateFormat.getBestDateTimePattern(Locale.getDefault(), "dMMMMyyyy");
+
+                        patch = DateFormat.format(format, patchDate).toString();
+                    } catch (ParseException e) {
+                        // broken parse; fall through and use the raw string
+                    }
                 }
+            } catch (java.lang.NoSuchFieldError e) {
 
-                patch = DateFormat.format(format, patchDate).toString();
-            } catch (ParseException e) {
-                // broken parse; fall through and use the raw string
             }
         }
 
@@ -285,31 +310,6 @@ public class InfoUtils
         }
 
         return cpu_abi;
-    }
-
-    public static String getCpuFreqInfo (ShellExecuter se)
-    {
-        int cpus = 10;
-
-        String res = "";
-
-        /*
-        for (int i = 0; i < cpus; i++)
-        {
-            String line = getCpuFreqInfo(se, i, "cpuinfo_cur_freq") + "/" + getCpuFreqInfo(se, i, "cpuinfo_max_freq") + "\n";
-            line += getCpuFreqInfo(se, i, "scaling_governor") + "\n";
-
-            res += line;
-        }*/
-
-        String line = getCpuFreqInfo(se, 0, "cpuinfo_max_freq") + "\n";
-        line += getCpuFreqInfo(se, 0, "scaling_governor") + "\n";
-
-        res += line + getCpuABI();
-
-        res += getPatchLevel();
-
-        return res;
     }
 
     //
