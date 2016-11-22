@@ -124,8 +124,6 @@ public class InfoList
         if (InfoUtils.isRkPlatform(platform))
             hash.put(InfoUtils.WIFI,  InfoUtils.getRkWiFi(exec));
 
-        hash.put(InfoUtils.BUILD,  Build.DISPLAY + " " + InfoUtils.getCpuFreqInfo(exec));
-
         String[] keyList = {
                 InfoUtils.PMIC,
                 InfoUtils.RTC,
@@ -144,8 +142,7 @@ public class InfoList
                 InfoUtils.SOUND,
                 InfoUtils.MODEM,
                 InfoUtils.UNKNOWN,
-                InfoUtils.EXTRA,
-                InfoUtils.BUILD
+                InfoUtils.EXTRA
                 //InfoUtils.DRIVERS
         };
 
@@ -229,15 +226,23 @@ public class InfoList
             hash.put(InfoUtils.PATCH,  patchLevel);
         }
 
+        CpuInfo cpuInfo = new CpuInfo();
+
+        hash.put(InfoUtils.CPU,      cpuInfo.getHardware());
+        hash.put(InfoUtils.CORES,    cpuInfo.getCores());
+        hash.put(InfoUtils.FAMILY,   cpuInfo.getArmFamily());
         hash.put(InfoUtils.ABI,      InfoUtils.getCpuABI());
-        hash.put(InfoUtils.FREQ,     InfoUtils.getCpuFreqInfo(exec));
+        hash.put(InfoUtils.CLOCK_SPEED, InfoUtils.getClockSpeed(exec) );
         hash.put(InfoUtils.GOVERNOR, InfoUtils.getCpuGovernor(exec));
 
         String[] keyList = {
                 InfoUtils.BUILD,
                 InfoUtils.PATCH,
+                InfoUtils.CPU,
+                InfoUtils.CORES,
+                InfoUtils.FAMILY,
                 InfoUtils.ABI,
-                InfoUtils.FREQ,
+                InfoUtils.CLOCK_SPEED,
                 InfoUtils.GOVERNOR
         };
 

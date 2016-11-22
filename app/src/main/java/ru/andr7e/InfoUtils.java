@@ -58,8 +58,11 @@ public class InfoUtils
     public static final String EXTRA         = "Extra";
 
     public static final String BUILD         = "Build";
+    public static final String CPU           = "CPU";
+    public static final String CORES         = "Cores";
+    public static final String FAMILY        = "Family";
     public static final String ABI           = "ABI";
-    public static final String FREQ          = "Freq";
+    public static final String CLOCK_SPEED   = "Clock speed";
     public static final String GOVERNOR      = "Governor";
     public static final String PATCH         = "Patch";
 
@@ -237,13 +240,6 @@ public class InfoUtils
         return se.execute(command);
     }
 
-    public static String getMaxCpuFreq (ShellExecuter se)
-    {
-        String command = "cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq";
-
-        return se.execute(command);
-    }
-
     public static String getCpuFreqInfo (ShellExecuter se, int cpuNum, String key)
     {
         String command = "cat /sys/devices/system/cpu/cpu" + cpuNum + "/cpufreq/" + key;
@@ -251,7 +247,21 @@ public class InfoUtils
         return se.execute(command);
     }
 
-    public static String getCpuFreqInfo (ShellExecuter se)
+    public static String getClockSpeed (ShellExecuter se)
+    {
+        return getMinCpuFreq(se) + " - " + getMaxCpuFreq(se);
+    }
+
+    public static String getMinCpuFreq (ShellExecuter se)
+    {
+        String freqStr = getCpuFreqInfo(se, 0, "cpuinfo_min_freq");
+
+        Integer freq = Integer.parseInt(freqStr) / 1000;
+
+        return freq.toString();
+    }
+
+    public static String getMaxCpuFreq (ShellExecuter se)
     {
         String freqStr = getCpuFreqInfo(se, 0, "cpuinfo_max_freq");
 
