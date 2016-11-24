@@ -1,5 +1,6 @@
 package ru.andr7e.deviceinfohw;
 
+import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -286,13 +287,25 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
                 //System.out.println("!!!!!!!!!!!" + rootMode);
 
+                long startTime = System.nanoTime();
+
                 ArrayList< Pair<String, String>> objList = InfoList.buildInfoList(isRootMode, isAppendAddress, context);
+
+                long endTime = System.nanoTime();
+                long methodDuration = (endTime - startTime);
+                System.out.println("time:" + methodDuration);
 
                 fillTableView(tableLayout, objList);
             }
             else if (tab == 2)
             {
-                ArrayList< Pair<String, String> > objList = InfoList.buildFeatureInfoList();
+                Context context = tableLayout.getContext();
+
+                ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
+                ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
+                activityManager.getMemoryInfo(memoryInfo);
+
+                ArrayList< Pair<String, String> > objList = InfoList.buildFeatureInfoList(context, memoryInfo);
 
                 fillTableView(tableLayout, objList);
             }
@@ -334,7 +347,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             {
                 if (tab == 4)
                 {
-                    String partitions = InfoUtils.getRkPartitions(exec);
+                    String partitions = InfoUtils.getRkPartitions();
 
                     if ( ! partitions.isEmpty())
                         textView.setText(partitions);

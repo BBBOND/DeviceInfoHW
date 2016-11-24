@@ -1,5 +1,6 @@
 package ru.andr7e;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
@@ -79,7 +80,7 @@ public class InfoList
         addItem(objList, "Android Version", InfoUtils.getAndroidVersion());
         addItem(objList, "API", InfoUtils.getAndroidAPI());
 
-        addItem(objList, "Kernel", InfoUtils.getKernelVersion(exec));
+        addItem(objList, "Kernel", InfoUtils.getKernelVersion());
 
         //
         HashMap<String,String> hash = InfoUtils.getDriversHash(exec, isAppendAddress, context);
@@ -158,7 +159,7 @@ public class InfoList
 
         //
         addItem(objList, InfoUtils.RAM,   InfoUtils.getRamType(exec));
-        addItem(objList, InfoUtils.FLASH, InfoUtils.getFlashName(exec));
+        addItem(objList, InfoUtils.FLASH, InfoUtils.getFlashName());
 
         addItem(objList, "Baseband", Build.getRadioVersion());
 
@@ -210,9 +211,8 @@ public class InfoList
         return objList;
     }
 
-    public static ArrayList< Pair<String, String> > buildFeatureInfoList() {
-        ShellExecuter exec = new ShellExecuter();
-
+    public static ArrayList< Pair<String, String> > buildFeatureInfoList(Context context, ActivityManager.MemoryInfo memoryInfo)
+    {
         ArrayList<Pair<String, String>> objList = new ArrayList<Pair<String, String>>();
 
         HashMap<String,String> hash = new HashMap<String,String>();
@@ -231,9 +231,13 @@ public class InfoList
         hash.put(InfoUtils.CPU,      cpuInfo.getHardware());
         hash.put(InfoUtils.CORES,    cpuInfo.getCores());
         hash.put(InfoUtils.FAMILY,   cpuInfo.getArmFamily());
-        hash.put(InfoUtils.ABI,      InfoUtils.getCpuABI());
-        hash.put(InfoUtils.CLOCK_SPEED, InfoUtils.getClockSpeed(exec) );
-        hash.put(InfoUtils.GOVERNOR, InfoUtils.getCpuGovernor(exec));
+        hash.put(InfoUtils.ABI, InfoUtils.getCpuABI());
+
+        hash.put(InfoUtils.CLOCK_SPEED, InfoUtils.getClockSpeed() + " MHz");
+        hash.put(InfoUtils.GOVERNOR, InfoUtils.getCpuGovernor());
+
+        hash.put(InfoUtils.MEMORY,   InfoUtils.getTotalMemory(memoryInfo) + " MB");
+
 
         String[] keyList = {
                 InfoUtils.BUILD,
@@ -243,7 +247,8 @@ public class InfoList
                 InfoUtils.FAMILY,
                 InfoUtils.ABI,
                 InfoUtils.CLOCK_SPEED,
-                InfoUtils.GOVERNOR
+                InfoUtils.GOVERNOR,
+                InfoUtils.MEMORY
         };
 
         for (String key : keyList)

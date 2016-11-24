@@ -1,5 +1,6 @@
 package ru.andr7e;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.hardware.Sensor;
@@ -64,6 +65,7 @@ public class InfoUtils
     public static final String ABI           = "ABI";
     public static final String CLOCK_SPEED   = "Clock speed";
     public static final String GOVERNOR      = "Governor";
+    public static final String MEMORY        = "Memory";
     public static final String PATCH         = "Patch";
 
     static ArrayList<String> mtkCameraListCached;
@@ -155,39 +157,32 @@ public class InfoUtils
 
     // Shell
 
-    public static String getKernelVersion (ShellExecuter se)
+    public static String getKernelVersion ()
     {
-        String command = "cat /proc/version";
+        String path = "/proc/version";
 
-        return se.execute(command);
+        return IOUtil.getFileText(path);
     }
 
-    public static String getFlashName (ShellExecuter se)
+    public static String getFlashName ()
     {
-        String command = "cat /sys/class/mmc_host/mmc0/mmc0:0001/name";
+        String path = "/sys/class/mmc_host/mmc0/mmc0:0001/name";
 
-        return se.execute(command);
-    }
-
-    public static String getCpufreq (ShellExecuter se)
-    {
-        String command = "cat /proc/cpufreq/cpufreq_freq";
-
-        return se.execute(command);
+        return IOUtil.getFileText(path);
     }
 
     public static String getRamType (ShellExecuter se)
     {
-        String command = "cat /sys/bus/platform/drivers/ddr_type/ddr_type";
+        String path = "/sys/bus/platform/drivers/ddr_type/ddr_type";
 
-        return se.execute(command);
+        return IOUtil.getFileText(path);
     }
 
     public static String getSoundCard (ShellExecuter se)
     {
-        String command = "cat /proc/asound/card0/id";
+        String path = "/proc/asound/card0/id";
 
-        return se.execute(command);
+        return IOUtil.getFileText(path);
     }
 
     public static boolean isMtkPlatform(String platform)
@@ -205,74 +200,74 @@ public class InfoUtils
         return platform.toUpperCase().startsWith("QCOM") || platform.toUpperCase().startsWith("MSM");
     }
 
-    public static String getRkPartitions (ShellExecuter se)
+    public static String getRkPartitions ()
     {
-        String command  = "cat /proc/mtd";
+        String path  = "/proc/mtd";
 
-        return se.execute(command);
+        return IOUtil.getFileText(path);
     }
 
     public static String getMtkPartitionsGPT (ShellExecuter se)
     {
-        String command = "cat /proc/partinfo";
+        String path = "/proc/partinfo";
 
-        return se.execute(command);
+        return IOUtil.getFileText(path);
     }
 
     public static String getMtkPartitionsMBR (ShellExecuter se)
     {
-        String command = "cat /proc/dumchar_info";
+        String path = "/proc/dumchar_info";
 
-        return se.execute(command);
+        return IOUtil.getFileText(path);
     }
 
     public static String getRkNandInfo (ShellExecuter se)
     {
-        String command = "cat /proc/rknand";
+        String path = "/proc/rknand";
 
-        return se.execute(command);
+        return IOUtil.getFileText(path);
     }
 
     public static String getRkWiFi (ShellExecuter se)
     {
-        String command = "cat /sys/class/rkwifi/chip";
+        String path = "/sys/class/rkwifi/chip";
 
-        return se.execute(command);
+        return IOUtil.getFileText(path);
     }
 
-    public static String getCpuFreqInfo (ShellExecuter se, int cpuNum, String key)
+    public static String getCpuFreqInfo (int cpuNum, String key)
     {
-        String command = "cat /sys/devices/system/cpu/cpu" + cpuNum + "/cpufreq/" + key;
+        String path = "/sys/devices/system/cpu/cpu" + cpuNum + "/cpufreq/" + key;
 
-        return se.execute(command);
+        return IOUtil.getFileText(path);
     }
 
-    public static String getClockSpeed (ShellExecuter se)
+    public static String getClockSpeed ()
     {
-        return getMinCpuFreq(se) + " - " + getMaxCpuFreq(se);
+        return getMinCpuFreq() + " - " + getMaxCpuFreq();
     }
 
-    public static String getMinCpuFreq (ShellExecuter se)
+    public static String getMinCpuFreq ()
     {
-        String freqStr = getCpuFreqInfo(se, 0, "cpuinfo_min_freq");
+        String freqStr = getCpuFreqInfo(0, "cpuinfo_min_freq");
 
         Integer freq = Integer.parseInt(freqStr) / 1000;
 
         return freq.toString();
     }
 
-    public static String getMaxCpuFreq (ShellExecuter se)
+    public static String getMaxCpuFreq ()
     {
-        String freqStr = getCpuFreqInfo(se, 0, "cpuinfo_max_freq");
+        String freqStr = getCpuFreqInfo(0, "cpuinfo_max_freq");
 
         Integer freq = Integer.parseInt(freqStr) / 1000;
 
         return freq.toString();
     }
 
-    public static String getCpuGovernor (ShellExecuter se)
+    public static String getCpuGovernor ()
     {
-        return getCpuFreqInfo(se, 0, "scaling_governor");
+        return getCpuFreqInfo(0, "scaling_governor");
     }
 
     public static String getPatchLevel ()
@@ -320,6 +315,21 @@ public class InfoUtils
         }
 
         return cpu_abi;
+    }
+
+    public static String getTotalMemory(ActivityManager.MemoryInfo mi)
+    {
+        System.out.println("mem:" + mi.availMem / 1024 / 1024 + "/" + mi.totalMem / 1024 / 1024);
+
+        int currentapiVersion =  Build.VERSION.SDK_INT;
+        if (currentapiVersion >= Build.VERSION_CODES.JELLY_BEAN) {
+            long total = mi.totalMem / 1024 / 1024;
+
+
+            return String.valueOf(total);
+        }
+
+        return "";
     }
 
     //
