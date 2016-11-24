@@ -61,6 +61,7 @@ public class InfoUtils
     public static final String BUILD         = "Build";
     public static final String CPU           = "CPU";
     public static final String CORES         = "Cores";
+    public static final String REVISION      = "Revision";
     public static final String FAMILY        = "Family";
     public static final String ABI           = "ABI";
     public static final String CLOCK_SPEED   = "Clock speed";

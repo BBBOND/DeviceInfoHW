@@ -13,11 +13,15 @@ public class CpuInfo
 
     private Integer cores_;
 
+    private String revision_;
+
     CpuInfo()
     {
         cores_ = 0;
 
         info_ = readInfo();
+
+        revision_ = "";
 
         hash_ = new HashMap<String,String>();
         partNumHash_ = new HashMap<String,String>();
@@ -53,6 +57,19 @@ public class CpuInfo
                 System.out.println(key + " " + value);
             }
         }
+
+        //
+
+        String variant  = hash_.get("CPU variant");
+        String revision = hash_.get("CPU revision");
+
+        int iVariant = Integer.decode(variant);
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("r").append(iVariant).append("p").append(revision);
+
+        revision_ = sb.toString();
     }
 
     void addPartNum(String partNum, String name)
@@ -102,6 +119,11 @@ public class CpuInfo
         Integer count = cores_ + 1;
 
         return count.toString();
+    }
+
+    String getRevision()
+    {
+        return revision_;
     }
 
     public static String readInfo ()

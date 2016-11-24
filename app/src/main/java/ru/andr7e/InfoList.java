@@ -230,6 +230,7 @@ public class InfoList
 
         hash.put(InfoUtils.CPU,      cpuInfo.getHardware());
         hash.put(InfoUtils.CORES,    cpuInfo.getCores());
+        hash.put(InfoUtils.REVISION, cpuInfo.getRevision());
         hash.put(InfoUtils.FAMILY,   cpuInfo.getArmFamily());
         hash.put(InfoUtils.ABI, InfoUtils.getCpuABI());
 
@@ -238,7 +239,6 @@ public class InfoList
 
         hash.put(InfoUtils.MEMORY,   InfoUtils.getTotalMemory(memoryInfo) + " MB");
 
-
         String[] keyList = {
                 InfoUtils.BUILD,
                 InfoUtils.PATCH,
@@ -246,6 +246,7 @@ public class InfoList
                 InfoUtils.CORES,
                 InfoUtils.FAMILY,
                 InfoUtils.ABI,
+                InfoUtils.REVISION,
                 InfoUtils.CLOCK_SPEED,
                 InfoUtils.GOVERNOR,
                 InfoUtils.MEMORY
