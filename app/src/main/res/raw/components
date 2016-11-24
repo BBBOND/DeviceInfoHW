@@ -41,7 +41,7 @@ LCM:
 ssd2828
 rk\w+-mipi
 rk\w+-lvds
-rk\w+-lcd
+rk\w+-lcd$
 ;
 CHARGER:
 bq

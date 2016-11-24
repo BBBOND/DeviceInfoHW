@@ -308,7 +308,11 @@ public class InfoUtils
         int currentapiVersion =  Build.VERSION.SDK_INT;
         if (currentapiVersion >= Build.VERSION_CODES.LOLLIPOP)
         {
-            cpu_abi = Build.SUPPORTED_64_BIT_ABIS[0];
+            String abis[] = Build.SUPPORTED_64_BIT_ABIS;
+            if (abis.length > 0)
+               cpu_abi = abis[0];
+           else
+               cpu_abi = Build.CPU_ABI;
         }
         else
         {
