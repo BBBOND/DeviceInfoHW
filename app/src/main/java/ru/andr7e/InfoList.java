@@ -226,6 +226,8 @@ public class InfoList
             hash.put(InfoUtils.PATCH,  patchLevel);
         }
 
+        String platform = InfoUtils.getPlatform();
+
         CpuInfo cpuInfo = new CpuInfo();
 
         hash.put(InfoUtils.CPU,      cpuInfo.getHardware());
@@ -236,6 +238,12 @@ public class InfoList
 
         hash.put(InfoUtils.CLOCK_SPEED, CpuFreq.getClockSpeed() + " MHz");
         hash.put(InfoUtils.GOVERNOR, CpuFreq.getGovernor());
+
+        if (InfoUtils.isQualcomPlatform(platform))
+        {
+            hash.put(InfoUtils.GPU, "Adreno");
+            hash.put(InfoUtils.GPU_CLOCK, GpuFreq.getClockSpeed() + " MHz");
+        }
 
         hash.put(InfoUtils.MEMORY,   InfoUtils.getTotalMemory(memoryInfo) + " MB");
 
@@ -249,6 +257,8 @@ public class InfoList
                 InfoUtils.REVISION,
                 InfoUtils.CLOCK_SPEED,
                 InfoUtils.GOVERNOR,
+                InfoUtils.GPU,
+                InfoUtils.GPU_CLOCK,
                 InfoUtils.MEMORY
         };
 

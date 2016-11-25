@@ -66,6 +66,8 @@ public class InfoUtils
     public static final String ABI           = "ABI";
     public static final String CLOCK_SPEED   = "Clock speed";
     public static final String GOVERNOR      = "Governor";
+    public static final String GPU           = "GPU";
+    public static final String GPU_CLOCK     = "GPU clock";
     public static final String MEMORY        = "Memory";
     public static final String PATCH         = "Patch";
 

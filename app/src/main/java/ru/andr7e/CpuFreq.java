@@ -23,18 +23,14 @@ public class CpuFreq
     {
         String freqStr = getFreqInfo(0, "cpuinfo_min_freq");
 
-        Integer freq = Integer.parseInt(freqStr) / 1000;
-
-        return freq.toString();
+        return Util.formatFreq(freqStr);
     }
 
     public static String getMaxFreq ()
     {
         String freqStr = getFreqInfo(0, "cpuinfo_max_freq");
 
-        Integer freq = Integer.parseInt(freqStr) / 1000;
-
-        return freq.toString();
+        return Util.formatFreq(freqStr);
     }
 
     public static String getGovernor ()
