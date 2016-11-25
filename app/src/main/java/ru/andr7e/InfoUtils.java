@@ -236,41 +236,6 @@ public class InfoUtils
         return IOUtil.getFileText(path);
     }
 
-    public static String getCpuFreqInfo (int cpuNum, String key)
-    {
-        String path = "/sys/devices/system/cpu/cpu" + cpuNum + "/cpufreq/" + key;
-
-        return IOUtil.getFileText(path);
-    }
-
-    public static String getClockSpeed ()
-    {
-        return getMinCpuFreq() + " - " + getMaxCpuFreq();
-    }
-
-    public static String getMinCpuFreq ()
-    {
-        String freqStr = getCpuFreqInfo(0, "cpuinfo_min_freq");
-
-        Integer freq = Integer.parseInt(freqStr) / 1000;
-
-        return freq.toString();
-    }
-
-    public static String getMaxCpuFreq ()
-    {
-        String freqStr = getCpuFreqInfo(0, "cpuinfo_max_freq");
-
-        Integer freq = Integer.parseInt(freqStr) / 1000;
-
-        return freq.toString();
-    }
-
-    public static String getCpuGovernor ()
-    {
-        return getCpuFreqInfo(0, "scaling_governor");
-    }
-
     public static String getPatchLevel ()
     {
         String patch = "";

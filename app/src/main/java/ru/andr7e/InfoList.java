@@ -234,8 +234,8 @@ public class InfoList
         hash.put(InfoUtils.FAMILY,   cpuInfo.getArmFamily());
         hash.put(InfoUtils.ABI, InfoUtils.getCpuABI());
 
-        hash.put(InfoUtils.CLOCK_SPEED, InfoUtils.getClockSpeed() + " MHz");
-        hash.put(InfoUtils.GOVERNOR, InfoUtils.getCpuGovernor());
+        hash.put(InfoUtils.CLOCK_SPEED, CpuFreq.getClockSpeed() + " MHz");
+        hash.put(InfoUtils.GOVERNOR, CpuFreq.getGovernor());
 
         hash.put(InfoUtils.MEMORY,   InfoUtils.getTotalMemory(memoryInfo) + " MB");
 
