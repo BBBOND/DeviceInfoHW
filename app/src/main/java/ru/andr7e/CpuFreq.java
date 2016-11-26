@@ -38,4 +38,11 @@ public class CpuFreq
         return getFreqInfo(0, "scaling_governor");
     }
 
+    public static String getCpuSoc ()
+    {
+        String path = "/sys/devices/system/cpu/soc";
+
+        return IOUtil.getFileText(path);
+    }
+
 }

@@ -1,5 +1,7 @@
 package ru.andr7e;
 
+import android.os.Build;
+
 import java.util.HashMap;
 
 /**
@@ -7,19 +9,22 @@ import java.util.HashMap;
  */
 public class CpuInfo
 {
+    private static final String CPU_PROC_PATH = "/proc/cpuinfo";
+    private static final String CPU_PRESENT_PATH = "/sys/devices/system/cpu/present";
+
     private String info_;
     private HashMap<String,String> hash_;
     private HashMap<String,String> partNumHash_;
 
-    private Integer cores_;
-
     private String revision_;
+
+    static private Integer cores_;
 
     CpuInfo()
     {
         cores_ = 0;
 
-        info_ = readInfo();
+        info_ = IOUtil.getFileText(CPU_PROC_PATH);
 
         revision_ = "";
 
@@ -29,6 +34,34 @@ public class CpuInfo
         initInfoHash();
 
         initPartNumHash();
+    }
+
+    public static int getCoresCount()
+    {
+        if (cores_ == 0 && IOUtil.isFileExist(CPU_PRESENT_PATH))
+        {
+            try {
+
+                //0-3
+                String cores = IOUtil.getFileText(CPU_PRESENT_PATH);
+
+                if (cores.contains("-")) {
+                    cores_ = Integer.parseInt(cores.split("-")[1]);
+                }
+
+                cores_++;
+            }
+            catch (Exception ignored)
+            {
+            }
+        }
+
+        if (cores_ == 0)
+        {
+            cores_ = Runtime.getRuntime().availableProcessors();
+        }
+
+        return cores_;
     }
 
     void initInfoHash()
@@ -45,9 +78,9 @@ public class CpuInfo
 
                 if (key.equals("processor"))
                 {
-                    int core = Integer.parseInt(value);
+                    //int core = Integer.parseInt(value);
 
-                    if (core > cores_) cores_ = core;
+                    //if (core > cores_) cores_ = core;
                 }
                 else
                 {
@@ -116,9 +149,9 @@ public class CpuInfo
 
     String getCores()
     {
-        Integer count = cores_ + 1;
+        int count = getCoresCount();
 
-        return count.toString();
+        return String.valueOf(count);
     }
 
     String getRevision()
@@ -126,9 +159,25 @@ public class CpuInfo
         return revision_;
     }
 
-    public static String readInfo ()
+    public static String getCpuABI ()
     {
-        return IOUtil.getFileText("/proc/cpuinfo");
+        String cpu_abi;
+
+        int currentapiVersion =  Build.VERSION.SDK_INT;
+        if (currentapiVersion >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            String abis[] = Build.SUPPORTED_64_BIT_ABIS;
+            if (abis.length > 0)
+                cpu_abi = abis[0];
+            else
+                cpu_abi = Build.CPU_ABI;
+        }
+        else
+        {
+            cpu_abi = Build.CPU_ABI;
+        }
+
+        return cpu_abi;
     }
 
 }

@@ -3,8 +3,6 @@ package ru.andr7e;
 import android.text.TextUtils;
 import android.util.Pair;
 
-import ru.andr7e.androidshell.ShellExecuter;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -16,6 +14,8 @@ import java.util.regex.Pattern;
 public class MtkUtil
 {
     final public static String PROJECT_CONFIG_PATH = "/system/data/misc/ProjectConfig.mk";
+
+    final public static String CAMERA_INFO_PROC = "/proc/driver/camera_info";;
 
     public static ArrayList<String> getCameraList()
     {
@@ -37,17 +37,17 @@ public class MtkUtil
         return cameraList;
     }
 
-    public static String getProcCameraInfo(ShellExecuter se)
+    public static String getProcCameraInfo()
     {
-        String command = "cat /proc/driver/camera_info";
+        String path = CAMERA_INFO_PROC;
 
-        return se.execute(command);
+        return IOUtil.getFileText(path);
     }
 
-    public static ArrayList<String> getProcCameraList(ShellExecuter se)
+    public static ArrayList<String> getProcCameraList()
     {
         // tets "CAM[1]: imx164mipiraw; CAM[2]: ov9760mipiraw;";  CAM[%d]:%s;
-        String info = getProcCameraInfo(se);
+        String info = getProcCameraInfo();
 
         ArrayList<String> list = new ArrayList<String>();
 

@@ -69,6 +69,7 @@ public class InfoUtils
     public static final String GPU           = "GPU";
     public static final String GPU_CLOCK     = "GPU clock";
     public static final String MEMORY        = "Memory";
+    public static final String DISK          = "Disk";
     public static final String PATCH         = "Patch";
 
     static ArrayList<String> mtkCameraListCached;
@@ -167,21 +168,7 @@ public class InfoUtils
         return IOUtil.getFileText(path);
     }
 
-    public static String getFlashName ()
-    {
-        String path = "/sys/class/mmc_host/mmc0/mmc0:0001/name";
-
-        return IOUtil.getFileText(path);
-    }
-
-    public static String getRamType (ShellExecuter se)
-    {
-        String path = "/sys/bus/platform/drivers/ddr_type/ddr_type";
-
-        return IOUtil.getFileText(path);
-    }
-
-    public static String getSoundCard (ShellExecuter se)
+    public static String getSoundCard ()
     {
         String path = "/proc/asound/card0/id";
 
@@ -210,28 +197,28 @@ public class InfoUtils
         return IOUtil.getFileText(path);
     }
 
-    public static String getMtkPartitionsGPT (ShellExecuter se)
+    public static String getMtkPartitionsGPT ()
     {
         String path = "/proc/partinfo";
 
         return IOUtil.getFileText(path);
     }
 
-    public static String getMtkPartitionsMBR (ShellExecuter se)
+    public static String getMtkPartitionsMBR ()
     {
         String path = "/proc/dumchar_info";
 
         return IOUtil.getFileText(path);
     }
 
-    public static String getRkNandInfo (ShellExecuter se)
+    public static String getRkNandInfo ()
     {
         String path = "/proc/rknand";
 
         return IOUtil.getFileText(path);
     }
 
-    public static String getRkWiFi (ShellExecuter se)
+    public static String getRkWiFi ()
     {
         String path = "/sys/class/rkwifi/chip";
 
@@ -253,7 +240,7 @@ public class InfoUtils
                         SimpleDateFormat template = new SimpleDateFormat("yyyy-MM-dd");
                         Date patchDate = template.parse(patch);
 
-                        String format = DateFormat.getBestDateTimePattern(Locale.getDefault(), "dMMMMyyyy");
+                        String format = "dd.MM.yyyy";
 
                         patch = DateFormat.format(format, patchDate).toString();
                     } catch (ParseException e) {
@@ -267,43 +254,6 @@ public class InfoUtils
 
         return patch;
     }
-
-    public static String getCpuABI ()
-    {
-        String cpu_abi;
-
-        int currentapiVersion =  Build.VERSION.SDK_INT;
-        if (currentapiVersion >= Build.VERSION_CODES.LOLLIPOP)
-        {
-            String abis[] = Build.SUPPORTED_64_BIT_ABIS;
-            if (abis.length > 0)
-               cpu_abi = abis[0];
-           else
-               cpu_abi = Build.CPU_ABI;
-        }
-        else
-        {
-            cpu_abi = Build.CPU_ABI;
-        }
-
-        return cpu_abi;
-    }
-
-    public static String getTotalMemory(ActivityManager.MemoryInfo mi)
-    {
-        System.out.println("mem:" + mi.availMem / 1024 / 1024 + "/" + mi.totalMem / 1024 / 1024);
-
-        int currentapiVersion =  Build.VERSION.SDK_INT;
-        if (currentapiVersion >= Build.VERSION_CODES.JELLY_BEAN) {
-            long total = mi.totalMem / 1024 / 1024;
-
-
-            return String.valueOf(total);
-        }
-
-        return "";
-    }
-
     //
 
     public static String makeFullNameI2C (String name, String address, boolean enable)
@@ -698,7 +648,7 @@ public class InfoUtils
         {
             if (mtkCameraListCached == null || mtkCameraListCached.isEmpty())
             {
-                ArrayList<String> procCameraList = MtkUtil.getProcCameraList(se);
+                ArrayList<String> procCameraList = MtkUtil.getProcCameraList();
 
                 if ( ! procCameraList.isEmpty())
                 {

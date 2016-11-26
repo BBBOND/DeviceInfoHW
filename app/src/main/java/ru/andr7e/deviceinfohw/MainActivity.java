@@ -275,12 +275,14 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
             String platform = InfoUtils.getPlatform();
 
-            ShellExecuter exec = new ShellExecuter();
+            Context context = tableLayout.getContext();
+
+            ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
+            ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
+            activityManager.getMemoryInfo(memoryInfo);
 
             if (tab == 1)
             {
-                Context context = tableLayout.getContext();
-
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
                 boolean isRootMode      = prefs.getBoolean(PREF_USE_ROOT_MODE, false);
                 boolean isAppendAddress = prefs.getBoolean(PREF_APPEND_I2C_ADDRESS, false);
@@ -289,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
                 long startTime = System.nanoTime();
 
-                ArrayList< Pair<String, String>> objList = InfoList.buildInfoList(isRootMode, isAppendAddress, context);
+                ArrayList< Pair<String, String>> objList = InfoList.buildInfoList(isRootMode, isAppendAddress, context, memoryInfo);
 
                 long endTime = System.nanoTime();
                 long methodDuration = (endTime - startTime);
@@ -299,12 +301,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             }
             else if (tab == 2)
             {
-                Context context = tableLayout.getContext();
-
-                ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
-                ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
-                activityManager.getMemoryInfo(memoryInfo);
-
                 ArrayList< Pair<String, String> > objList = InfoList.buildFeatureInfoList(context, memoryInfo);
 
                 fillTableView(tableLayout, objList);
@@ -326,13 +322,13 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 }
                 else if (tab == 5)
                 {
-                    String partitions = InfoUtils.getMtkPartitionsGPT(exec);
+                    String partitions = InfoUtils.getMtkPartitionsGPT();
 
                     boolean swapAddress = false;
 
                     if (partitions.isEmpty())
                     {
-                        partitions = InfoUtils.getMtkPartitionsMBR(exec);
+                        partitions = InfoUtils.getMtkPartitionsMBR();
 
                         swapAddress = true;
                     }
@@ -354,7 +350,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 }
                 else if (tab == 5)
                 {
-                    String nandInfo = InfoUtils.getRkNandInfo(exec);
+                    String nandInfo = InfoUtils.getRkNandInfo();
 
                     if ( ! nandInfo.isEmpty())
                         fillTableViewSimpleText(tableLayout, nandInfo);

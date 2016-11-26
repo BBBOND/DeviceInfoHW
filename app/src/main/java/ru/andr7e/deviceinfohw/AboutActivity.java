@@ -1,5 +1,6 @@
 package ru.andr7e.deviceinfohw;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.os.StrictMode;
@@ -120,6 +121,10 @@ public class AboutActivity extends AppCompatActivity {
 
             Context context = getBaseContext();
 
+            ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
+            ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
+            activityManager.getMemoryInfo(memoryInfo);
+
             if (InfoUtils.isMtkPlatform(platform))
             {
                 boolean useRoot = true;
@@ -128,20 +133,20 @@ public class AboutActivity extends AppCompatActivity {
 
                 if (hash.isEmpty())
                 {
-                    ArrayList<Pair<String, String>> objList = InfoList.buildInfoList(useRoot, true, context);
+                    ArrayList<Pair<String, String>> objList = InfoList.buildInfoList(useRoot, true, context, memoryInfo);
                     objList.addAll(platformObjList);
                     json = JsonUtil.toJson(objList);
                 }
                 else
                 {
-                    ArrayList<Pair<String, String>> objList = InfoList.buildInfoList(useRoot, true, context);
+                    ArrayList<Pair<String, String>> objList = InfoList.buildInfoList(useRoot, true, context, memoryInfo);
                     objList.addAll(platformObjList);
                     json = JsonUtil.toJsonMtk(objList, hash);
                 }
             }
             else
             {
-                ArrayList<Pair<String, String>> objList = InfoList.buildInfoList(false, true, context);
+                ArrayList<Pair<String, String>> objList = InfoList.buildInfoList(false, true, context, memoryInfo);
                 objList.addAll(platformObjList);
                 json = JsonUtil.toJson(objList);
             }

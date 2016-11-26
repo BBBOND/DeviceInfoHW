@@ -61,7 +61,7 @@ public class InfoList
         return objList;
     }
 
-    public static ArrayList< Pair<String, String> > buildInfoList(boolean isRootMode, boolean isAppendAddress, Context context)
+    public static ArrayList< Pair<String, String> > buildInfoList(boolean isRootMode, boolean isAppendAddress, Context context, ActivityManager.MemoryInfo memoryInfo)
     {
         ShellExecuter exec = new ShellExecuter();
 
@@ -120,10 +120,10 @@ public class InfoList
             }
         }
 
-        hash.put(InfoUtils.SOUND, InfoUtils.getSoundCard(exec));
+        hash.put(InfoUtils.SOUND, InfoUtils.getSoundCard());
 
         if (InfoUtils.isRkPlatform(platform))
-            hash.put(InfoUtils.WIFI,  InfoUtils.getRkWiFi(exec));
+            hash.put(InfoUtils.WIFI,  InfoUtils.getRkWiFi());
 
         String[] keyList = {
                 InfoUtils.PMIC,
@@ -158,8 +158,8 @@ public class InfoList
         }
 
         //
-        addItem(objList, InfoUtils.RAM,   InfoUtils.getRamType(exec));
-        addItem(objList, InfoUtils.FLASH, InfoUtils.getFlashName());
+        addItem(objList, InfoUtils.RAM,   MemInfo.getModuleInfo(memoryInfo));
+        addItem(objList, InfoUtils.FLASH, MemInfo.getFlashName());
 
         addItem(objList, "Baseband", Build.getRadioVersion());
 
@@ -230,26 +230,41 @@ public class InfoList
 
         CpuInfo cpuInfo = new CpuInfo();
 
-        hash.put(InfoUtils.CPU,      cpuInfo.getHardware());
+        String cpuModel = cpuInfo.getHardware();
+
+        if (InfoUtils.isRkPlatform(platform))
+        {
+            String soc = CpuFreq.getCpuSoc();
+
+            if ( ! soc.isEmpty())
+            {
+                cpuModel = soc;
+            }
+        }
+
+        hash.put(InfoUtils.CPU,      cpuModel);
         hash.put(InfoUtils.CORES,    cpuInfo.getCores());
         hash.put(InfoUtils.REVISION, cpuInfo.getRevision());
         hash.put(InfoUtils.FAMILY,   cpuInfo.getArmFamily());
-        hash.put(InfoUtils.ABI, InfoUtils.getCpuABI());
+        hash.put(InfoUtils.ABI,      cpuInfo.getCpuABI());
 
-        hash.put(InfoUtils.CLOCK_SPEED, CpuFreq.getClockSpeed() + " MHz");
+        hash.put(InfoUtils.CLOCK_SPEED, Util.formatUnit(CpuFreq.getClockSpeed(), "MHz"));
         hash.put(InfoUtils.GOVERNOR, CpuFreq.getGovernor());
 
         if (InfoUtils.isQualcomPlatform(platform))
         {
             hash.put(InfoUtils.GPU, "Adreno");
-            hash.put(InfoUtils.GPU_CLOCK, GpuFreq.getClockSpeed() + " MHz");
+            hash.put(InfoUtils.GPU_CLOCK, Util.formatUnit(GpuFreq.getClockSpeed(), "MHz"));
+        }
+        else if (InfoUtils.isMtkPlatform(platform))
+        {
+            hash.put(InfoUtils.GPU_CLOCK, Util.formatUnit(GpuMtkFreq.getClockSpeed(), "MHz"));
         }
 
-        hash.put(InfoUtils.MEMORY,   InfoUtils.getTotalMemory(memoryInfo) + " MB");
+        hash.put(InfoUtils.MEMORY, MemInfo.getTotalSize(memoryInfo));
+        hash.put(InfoUtils.DISK, StorageInfo.getTotalInternalSize());
 
         String[] keyList = {
-                InfoUtils.BUILD,
-                InfoUtils.PATCH,
                 InfoUtils.CPU,
                 InfoUtils.CORES,
                 InfoUtils.FAMILY,
@@ -259,7 +274,10 @@ public class InfoList
                 InfoUtils.GOVERNOR,
                 InfoUtils.GPU,
                 InfoUtils.GPU_CLOCK,
-                InfoUtils.MEMORY
+                InfoUtils.MEMORY,
+                InfoUtils.DISK,
+                InfoUtils.BUILD,
+                InfoUtils.PATCH,
         };
 
         for (String key : keyList)
